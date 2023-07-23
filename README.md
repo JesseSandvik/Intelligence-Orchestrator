@@ -188,6 +188,7 @@ Before we run our "hello" <i>Plugin Package</i> through <b>[IO]</b>, let's take 
 
         Are you sure you want to permanently delete the Plugin Package: <plugin-name>? (YES/NO)
 
+  - User input is case-sensitive and must be "YES" or "NO".
   - "YES" will permanently delete the <i>Plugin Package</i> from the plugins directory.
   - "NO" will not make any changes.
 
@@ -198,7 +199,7 @@ Before we run our "hello" <i>Plugin Package</i> through <b>[IO]</b>, let's take 
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
+3. Commit your changes: `git commit -m 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
