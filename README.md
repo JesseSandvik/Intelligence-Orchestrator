@@ -174,6 +174,31 @@ Before we run our "hello" <i>Plugin Package</i> through <b>[IO]</b>, let's take 
 <br />
 <br />
 
+#### Disabling Plugin Packages
+
+- All <i>Plugin Packages</i> are enabled by default.
+
+- If a user wanted to disable a <i>Plugin Package</i>, <b>[IO]</b> provides a built-in command to do so:
+
+        io set --plugin hello --io-detect disable
+
+- A disabled <i>Plugin Package</i> will not run as a subcommand for <b>[IO]</b>.
+
+- The contents of the disabled <i>Plugin Package</i> will be completely ignored by <b>[IO]</b>.
+
+- Modifying or removing the disabled <i>Plugin Package</i> will have no impact on <b>[IO]</b>.
+
+- If a <i>Plugin Package</i> with the same name as a disabled <i>Plugin Package</i> is added to <b>[IO]</b>, it will be completely ignored by <b>[IO]</b> until the <i>Plugin Package</i> has been manually enabled again.
+
+- If a user wanted to enable a <i>Plugin Package</i> that had been manually disabled, <b>[IO]</b> provides a built-in command to do so:
+
+        io set --plugin hello --io-detect enable
+
+- Once a disabled <i>Plugin Package</i> has been enabled, <b>[IO]</b> will immediately recognize and integrate the <i>Plugin Package</i>.
+
+<br />
+<br />
+
 #### Removing Plugin Packages
 
 - If a user wanted to remove a feature from <b>[IO]</b>, they can delete the <i>Plugin Package</i> for that feature.
