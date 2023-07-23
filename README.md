@@ -23,10 +23,13 @@ For <b>[IO]</b> to recognize and integrate a feature, a <i>Plugin Package</i> mu
         io/plugins/<plugin-package-name>/
 
 <br />
+<br />
 
 ### Plugin Packages
 
-<i>Plugin Packages</i> are required to follow a specific naming convention.
+- <i>Plugin Packages</i> encapsulate all of the behavior and information for a standalone feature. 
+
+- <i>Plugin Packages</i> are required to follow a specific naming convention.
 
 <br />
 
@@ -73,6 +76,7 @@ A <i>Plugin Package</i> requires <b>two</b> files:
             Plugin Configuration File: io/plugins/hello/hello.properties
 
 <br />
+<br />
 
 #### Plugin Package Review
 
@@ -83,6 +87,7 @@ All done! Let's have a look at our finished "hello" <i>Plugin Package</i>:
         Plugin Configuration File:   io/plugins/hello/hello.properties
 
 <br />
+<br />
 
 #### Load The Plugin Package
 
@@ -90,6 +95,7 @@ All done! Let's have a look at our finished "hello" <i>Plugin Package</i>:
 
 - Please be sure to follow the naming convention outlined above to ensure that <b>[IO]</b> is able to recognize and integrate your <i>Plugin Packages</i>.
 
+<br />
 <br />
 
 #### Run The Plugin Package
@@ -109,17 +115,61 @@ All done! Let's have a look at our finished "hello" <i>Plugin Package</i>:
         io hello --name Mark
 
 <br />
+<br />
 
-#### Removing Features
+#### Plugin Package Logging
+
+- <b>[IO]</b> performs logging automatically for all <i>Plugin Packages</i> when they are executed.
+
+- Logs for a <i>Plugin Package</i> can be found in the logs directory of that <i>Plugin Package</i>:
+
+        Plugin Package Log Directory: io/plugins/hello/logs
+
+- By default, log files older than 30 days will be deleted when the associated <i>Plugin Package</i> has been executed.
+
+    - This behavior can be modified with the built-in <b>[IO]</b> command:
+
+            io set --plugin hello --feature log --expire 10d10h10s
+
+    - This feature can also be disabled:
+
+            io set --plugin hello --feature log --expire disable
+
+    - To enable this feature after it has been disabled:
+
+            io set --plugin hello --feature log --expire enable
+
+    - Enabling this feature after it has been disabled will set the log expiration back to the last defined value.
+
+<br />
+<br />
+
+#### Plugin Package External Logging
+
+- <b>[IO]</b> can distribute logs to a directory of your choosing on your local machine.
+
+  - This feature is disabled by default, but can be enabled by using the built-in <b>[IO]</b> command:
+
+        io set --plugin hello --feature duplicate-logs --directory ~/i-want-my-logs-here/
+
+    - The directory that you specify will become the parent directory for the <i>Plugin Package</i> logs:
+
+            Plugin Package Log Directory: ~/i-want-my-logs-here/hello-logs/
+
+<br />
+<br />
+
+#### Removing Plugin Packages
 
 If a user wanted to remove a feature from <b>[IO]</b>, they can delete the <i>Plugin Package</i> for that feature.
 
         io/plugins/<plugin-to-delete>/
 
-Alternatively, <b>[IO]</b> comes with a built-in command for deleting existing <i>Plugin Packages</i>.
+Alternatively, <b>[IO]</b> provides a built-in command for deleting existing <i>Plugin Packages</i>.
 
         io remove --plugin <plugin-name>
 
+<br />
 <br />
 
 ## Contributing
