@@ -1,13 +1,20 @@
 package com.github.intelligence.orchestrator.picocli;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Model.*;
 
-public class IOCommand {
+import java.util.concurrent.Callable;
+
+public class IOCommand implements Callable<Integer> {
     CommandSpec spec;
-    public IOCommand() {
+    String[] args;
+    public IOCommand(String[] args) {
         this.spec = CommandSpec.create();
+        this.args = args;
     }
-    public CommandSpec getSpec() {
-        return spec;
+    @Override
+    public Integer call() {
+        this.spec.mixinStandardHelpOptions(true);
+         return new CommandLine(this.spec).execute(this.args);
     }
 }
