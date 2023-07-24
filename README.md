@@ -10,23 +10,23 @@
 
 <br />
 
+## Key Benefits
 
-## Benefits
-  - Eliminates the need to manage PATH variables for different command line tools.
+- Eliminates the need to manage PATH variables for different command line tools.
 
-  - Simplifies the process of managing multiple software versions on one operating system.
+- Simplifies the process of managing multiple software versions on one operating system.
 
-  - The features <b>[IO]</b> provides are entirely up to the user:
+- The features <b>[IO]</b> provides are entirely up to the user:
 
-    - Anything that can be executed with a programming language or command line tool can be used as a subcommand for <b>[IO]</b>.
+  - Anything that can be executed with a programming language or command line tool can be used as a subcommand for <b>[IO]</b>.
 
-    - Command line tools can easily be added or removed to <b>[IO]</b>.
+  - Command line tools can easily be added or removed to <b>[IO]</b>.
 
-  - <b>[IO]</b> is light-weight and highly scalable with no prerequisites:
+- <b>[IO]</b> is light-weight and highly scalable with no prerequisites:
 
-    - No software is required to install or run <b>[IO]</b>. Only an operating system and file system are required.
+  - No software is required to install or run <b>[IO]</b>. Only an operating system and file system are required.
     
-    - <b>[IO]</b> will only ever be as big or small as you make it. You add the command line tools, and <b>[IO]</b> does the rest.
+  - <b>[IO]</b> will only ever be as big or small as you make it. You add the command line tools, and <b>[IO]</b> does the rest.
 
 - <b>[IO]</b> can be used a framework for developing a robust SDK:
 
