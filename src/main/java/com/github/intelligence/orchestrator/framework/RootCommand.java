@@ -17,9 +17,9 @@ public class RootCommand {
                 .version("[IO] Version 1.0")
                 .mixinStandardHelpOptions(true);
     }
-    static void setSubcommands() {
+    static void setSubcommands(String[] args) {
         CommandFactory subcommandsFactory = new CommandFactory();
-//        subcommandsFactory.addcommand();
+        subcommandsFactory.addcommand();
         subcommands = subcommandsFactory.commands;
     }
     static void setUsageMessage() {
@@ -39,7 +39,7 @@ public class RootCommand {
     }
     public static void main(String[] args) {
         setSpec();
-        setSubcommands();
+        setSubcommands(args);
         setUsageMessage();
 
         CommandLine cmd = new CommandLine(rootSpec);
