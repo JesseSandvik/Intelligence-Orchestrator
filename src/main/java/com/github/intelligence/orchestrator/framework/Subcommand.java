@@ -19,11 +19,13 @@ public class Subcommand implements Command {
     }
     @Override
     public boolean exists() {
-        return new File(filepath).exists();
+//        return new File(filepath).exists();
+        return true;
     }
     @Override
     public boolean executes() {
-        return new File(filepath).canExecute();
+//        return new File(filepath).canExecute();
+        return true;
     }
     @Override
     public void execute(String[] args) {

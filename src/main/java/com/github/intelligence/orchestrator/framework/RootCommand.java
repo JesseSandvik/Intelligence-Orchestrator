@@ -2,25 +2,41 @@ package com.github.intelligence.orchestrator.framework;
 
 import com.command.Command;
 import com.command.CommandFactory;
+import com.command.InvalidCommandException;
 import picocli.CommandLine;
 import picocli.CommandLine.*;
 import picocli.CommandLine.Model.*;
 
-import java.util.List;
+import java.io.*;
+import java.util.Properties;
 
 public class RootCommand {
     static CommandSpec rootSpec;
-    static List<Command> subcommands;
     static void setSpec() {
         rootSpec = CommandSpec.create()
                 .name("io")
                 .version("[IO] Version 1.0")
                 .mixinStandardHelpOptions(true);
     }
-    static void setSubcommands(String[] args) {
+    static void setSubcommands(String[] args) throws InvalidCommandException {
         CommandFactory subcommandsFactory = new CommandFactory();
-        subcommandsFactory.addcommand();
-        subcommands = subcommandsFactory.commands;
+
+        final String rootCommandExecutableDir = System.getProperty("user.dir");
+        System.out.println("ROOT COMMAND EXECUTABLE DIR: " + rootCommandExecutableDir);
+        final String rootDir = rootCommandExecutableDir.substring(0, rootCommandExecutableDir.lastIndexOf("\\"));
+        System.out.println("ROOTDIR: " + rootDir);
+        final String pluginsDir = String.format("%s/plugins", rootDir);
+
+        final String subcommandPluginDir = String.format("%s/%s", pluginsDir, args[0]);
+        final String subcommandExecutableFile = String.format("%s/%s", subcommandPluginDir, args[0]);
+
+        Command subcommand = new Subcommand(args[0], subcommandExecutableFile);
+        subcommandsFactory.addcommand(subcommand);
+
+        rootSpec.addSubcommand(args[0], CommandSpec.wrapWithoutInspection((Runnable) () -> {
+            CommandLine currentSubcommand = rootSpec.subcommands().get(args[0]);
+            currentSubcommand.usage(System.out);
+        }));
     }
     static void setUsageMessage() {
         rootSpec.usageMessage()
@@ -33,19 +49,18 @@ public class RootCommand {
                 .footerHeading("Footer heading%n")
                 .footer("footer line 1", "footer line 2");
     }
-    static int run(ParseResult pr) {
-        Integer helpExitCode = CommandLine.executeHelpRequest(pr);
-        return helpExitCode != null ? helpExitCode : pr.matchedOptionValue('c', 1);
-    }
-    public static void main(String[] args) {
-        setSpec();
+    public static void main(String[] args) throws InvalidCommandException {
+        rootSpec = CommandSpec.create()
+                .name("io")
+                .mixinStandardHelpOptions(true);
+
+        if (args.length < 1) {
+            rootSpec.commandLine().usage(System.out);
+            System.exit(0);
+        }
         setSubcommands(args);
-        setUsageMessage();
 
-        CommandLine cmd = new CommandLine(rootSpec);
-        cmd.setExecutionStrategy(RootCommand::run);
-
-        int exitCode = cmd.execute(args);
-        System.exit(exitCode);
+//        subcommand.execute(args);
+        System.exit(new CommandLine(rootSpec).execute(args[0]));
     }
 }
