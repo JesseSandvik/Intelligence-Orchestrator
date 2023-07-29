@@ -7,6 +7,7 @@ import java.util.Objects;
 public class FileSystem {
     private static File file;
     private static String fileName;
+
     public void createFile(String fileNameArg) throws IOException {
         File fileToCreate = new File(fileNameArg);
 
@@ -16,6 +17,17 @@ public class FileSystem {
             System.out.println("File already exists: " + fileNameArg);
         }
     }
+
+    public void deleteFileOrEmptyDirectory(String path) {
+        File fileToDelete = new File(path);
+
+        if (fileToDelete.delete()) {
+            System.out.println("File/Directory deleted: " + path);
+        } else {
+            System.out.println("File does not exist or is not an empty directory.");
+        }
+    }
+
     public boolean fileExists(String fileNameArg) {
         if (file == null || !Objects.equals(fileNameArg, fileName)) {
             file = new File(fileNameArg);
@@ -23,6 +35,7 @@ public class FileSystem {
         }
         return file.exists();
     }
+
     public boolean fileExistsAndExecutes(String fileNameArg) {
         if (file == null || !Objects.equals(fileNameArg, fileName)) {
             file = new File(fileNameArg);
