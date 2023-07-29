@@ -9,19 +9,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FileSystemServiceUtility {
-    public void createTempDirectory(String prefix) throws IOException {
-        Files.createTempDirectory(prefix);
+    public boolean createTempDirectoryWithPrefix(String prefix) {
+        try {
+            Path newTempDir = Files.createTempDirectory(prefix);
+            System.out.println("Temporary directory created: " + newTempDir);
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
     private boolean deleteAllFilesAndDirectories(File directoryToDelete) {
-        File[] directoryContents = directoryToDelete.listFiles();
+        try {
+            File[] directoryContents = directoryToDelete.listFiles();
 
-        if (directoryContents != null) {
-            for (File content : directoryContents) {
-                deleteAllFilesAndDirectories(content);
+            if (directoryContents != null) {
+                for (File content : directoryContents) {
+                    deleteAllFilesAndDirectories(content);
+                }
             }
+            return directoryToDelete.delete();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
         }
-        return directoryToDelete.delete();
     }
 
     public void deleteTempDirectory(Path tempDir) {

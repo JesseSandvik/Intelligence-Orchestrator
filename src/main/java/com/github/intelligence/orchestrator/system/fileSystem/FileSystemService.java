@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileSystemService {
+    boolean createTempDirectoryWithPrefix(String prefix);
     List<String> listFiles(String directoryPath);
     boolean createFile(String filePath) throws IOException;
     boolean deleteFile(String filePath) throws IOException;

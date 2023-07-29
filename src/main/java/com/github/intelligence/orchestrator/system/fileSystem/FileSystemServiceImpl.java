@@ -11,6 +11,11 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
+    public boolean createTempDirectoryWithPrefix(String prefix) {
+        return fileUtility.createTempDirectoryWithPrefix(prefix);
+    }
+
+    @Override
     public List<String> listFiles(String directoryPath) {
         return fileUtility.listFiles(directoryPath);
     }
