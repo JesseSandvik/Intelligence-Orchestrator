@@ -3,6 +3,7 @@ package com.github.intelligence.orchestrator.system.operatingSystem;
 import java.io.IOException;
 
 public interface OperatingSystemService {
+    String getOperatingSystemTmpDir();
     String getOperatingSystemName();
     String getOperatingSystemVersion();
     String getOperatingSystemArchitecture();

@@ -7,7 +7,10 @@ public class OperatingSystemServiceImpl implements OperatingSystemService {
     public OperatingSystemServiceImpl() {
         this.osUtility = new OperatingSystemServiceUtility();
     }
-
+    @Override
+    public String getOperatingSystemTmpDir() {
+        return osUtility.getTmpDir();
+    }
     @Override
     public String getOperatingSystemName() {
         return osUtility.getOSName();

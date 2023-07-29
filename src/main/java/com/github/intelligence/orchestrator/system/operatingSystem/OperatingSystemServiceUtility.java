@@ -3,6 +3,7 @@ package com.github.intelligence.orchestrator.system.operatingSystem;
 import java.io.IOException;
 
 class OperatingSystemServiceUtility {
+    private static String tmpdir;
     private static String osName;
     private static String osVersion;
     private static String osArch;
@@ -12,6 +13,13 @@ class OperatingSystemServiceUtility {
     private static String userName;
     private static String userHome;
     private static String userDir;
+
+    public String getTmpDir() {
+        if (tmpdir == null) {
+            tmpdir = System.getProperty("java.io.tmpdir");
+        }
+        return tmpdir;
+    }
 
     public String getOSName() {
         if (osName == null) {

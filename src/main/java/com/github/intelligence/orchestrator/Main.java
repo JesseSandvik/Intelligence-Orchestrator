@@ -9,6 +9,7 @@ public class Main {
         OperatingSystemServiceImpl osService = new OperatingSystemServiceImpl();
         FileSystemService fileService = new FileSystemServiceImpl();
 
+        System.out.println(osService.getOperatingSystemTmpDir());
         System.out.println(osService.getOperatingSystemName());
         System.out.println(osService.getOperatingSystemVersion());
         System.out.println(osService.getOperatingSystemArchitecture());
