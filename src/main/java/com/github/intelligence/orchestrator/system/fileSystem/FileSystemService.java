@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface FileSystemService {
     List<String> listFiles(String directoryPath);
-    void createFile(String filePath) throws IOException;
-    void deleteFile(String filePath) throws IOException;
-    void moveFile(String sourceFilePath, String destinationFilePath) throws IOException;
-    void copyFile(String sourceFilePath, String destinationFilePath) throws IOException;
-    void renameFile(String filePath, String newFileName) throws IOException;
+    boolean createFile(String filePath) throws IOException;
+    boolean deleteFile(String filePath) throws IOException;
+    boolean moveFile(String sourceFilePath, String destinationFilePath) throws IOException;
+    boolean copyFile(String sourceFilePath, String destinationFilePath) throws IOException;
+    boolean renameFile(String filePath, String newFileName) throws IOException;
 }

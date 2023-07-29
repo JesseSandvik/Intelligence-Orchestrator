@@ -9,6 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FileSystemServiceUtility {
+    public void createTempDirectory(String prefix) throws IOException {
+        Files.createTempDirectory(prefix);
+    }
+
+    private boolean deleteAllFilesAndDirectories(File directoryToDelete) {
+        File[] directoryContents = directoryToDelete.listFiles();
+
+        if (directoryContents != null) {
+            for (File content : directoryContents) {
+                deleteAllFilesAndDirectories(content);
+            }
+        }
+        return directoryToDelete.delete();
+    }
+
+    public void deleteTempDirectory(Path tempDir) {
+        deleteAllFilesAndDirectories(tempDir.toFile());
+    }
     public List<String> listFiles(String directoryPath) {
         File directory = new File(directoryPath);
         List<String> fileNames = new ArrayList<>();
@@ -24,20 +42,23 @@ class FileSystemServiceUtility {
         }
         return fileNames;
     }
-    public void createFile(String filePath) throws IOException {
+
+    public boolean createFile(String filePath) throws IOException {
         File fileToCreate = new File(filePath);
 
         if (!fileToCreate.exists()) {
-            fileToCreate.createNewFile();
+            return fileToCreate.createNewFile();
         }
+        return false;
     }
 
-    public void deleteFile(String filePath) {
+    public boolean deleteFile(String filePath) {
         File fileToDelete = new File(filePath);
 
         if (fileToDelete.exists()) {
-            fileToDelete.delete();
+            return fileToDelete.delete();
         }
+        return false;
     }
 
     public void moveFile(String sourceFilePath, String destinationFilePath) throws IOException {
