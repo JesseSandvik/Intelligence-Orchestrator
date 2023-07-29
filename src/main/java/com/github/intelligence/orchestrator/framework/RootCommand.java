@@ -4,15 +4,11 @@ import com.command.Command;
 import com.command.CommandFactory;
 import com.command.InvalidCommandException;
 import picocli.CommandLine;
-import picocli.CommandLine.*;
 import picocli.CommandLine.Model.*;
-
-import java.io.*;
-import java.util.Properties;
 
 public class RootCommand {
     static CommandSpec rootSpec;
-    static void setSpec() {
+    static void initializeRootSpec() {
         rootSpec = CommandSpec.create()
                 .name("io")
                 .version("[IO] Version 1.0")
@@ -48,19 +44,5 @@ public class RootCommand {
                 .parameterListHeading("Positional Parameters%n")
                 .footerHeading("Footer heading%n")
                 .footer("footer line 1", "footer line 2");
-    }
-    public static void main(String[] args) throws InvalidCommandException {
-        rootSpec = CommandSpec.create()
-                .name("io")
-                .mixinStandardHelpOptions(true);
-
-        if (args.length < 1) {
-            rootSpec.commandLine().usage(System.out);
-            System.exit(0);
-        }
-        setSubcommands(args);
-
-//        subcommand.execute(args);
-        System.exit(new CommandLine(rootSpec).execute(args[0]));
     }
 }
