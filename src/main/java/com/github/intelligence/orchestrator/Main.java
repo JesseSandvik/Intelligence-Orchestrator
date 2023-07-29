@@ -1,11 +1,11 @@
 package com.github.intelligence.orchestrator;
 
 
-import com.github.intelligence.orchestrator.system.OperatingSystem;
+import com.github.intelligence.orchestrator.system.operatingSystem.OperatingSystemServiceUtility;
 
 public class Main {
     public static void main(String[] args) {
-        OperatingSystem os = new OperatingSystem();
+        OperatingSystemServiceUtility os = new OperatingSystemServiceUtility();
 
         System.out.println(os.getOSName());
         System.out.println(os.getOSVersion());

@@ -1,9 +1,11 @@
-package com.github.intelligence.orchestrator.system;
+package com.github.intelligence.orchestrator.system.operatingSystem;
 
-public class OperatingSystem {
-    private static String OSName;
-    private static String OSVersion;
-    private static String OSArch;
+import java.io.IOException;
+
+public class OperatingSystemServiceUtility {
+    private static String osName;
+    private static String osVersion;
+    private static String osArch;
     private static String fileSeparator;
     private static String pathSeparator;
     private static String lineSeparator;
@@ -12,24 +14,24 @@ public class OperatingSystem {
     private static String userDir;
 
     public String getOSName() {
-        if (OSName == null) {
-            OSName = System.getProperty("os.name");
+        if (osName == null) {
+            osName = System.getProperty("os.name");
         }
-        return OSName;
+        return osName;
     }
 
     public String getOSVersion() {
-        if (OSVersion == null) {
-            OSVersion = System.getProperty("os.version");
+        if (osVersion == null) {
+            osVersion = System.getProperty("os.version");
         }
-        return OSVersion;
+        return osVersion;
     }
 
     public String getOSArch() {
-        if (OSArch == null) {
-            OSArch = System.getProperty("os.arch");
+        if (osArch == null) {
+            osArch = System.getProperty("os.arch");
         }
-        return OSArch;
+        return osArch;
     }
 
     public String getFileSeparator() {
@@ -74,7 +76,7 @@ public class OperatingSystem {
         return userDir;
     }
 
-    public void printAllProperties() {
-        System.getProperties().list(System.out);
+    public void executeShellCommand(String command) throws IOException {
+        Runtime.getRuntime().exec(command);
     }
 }
