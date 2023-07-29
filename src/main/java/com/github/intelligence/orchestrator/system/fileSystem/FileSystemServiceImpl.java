@@ -12,7 +12,7 @@ public class FileSystemServiceImpl implements FileSystemService {
 
     @Override
     public List<String> listFiles(String directoryPath) {
-        return null;
+        return fileUtility.listFiles(directoryPath);
     }
 
     @Override
@@ -27,16 +27,16 @@ public class FileSystemServiceImpl implements FileSystemService {
 
     @Override
     public void moveFile(String sourceFilePath, String destinationFilePath) throws IOException {
-
+        fileUtility.moveFile(sourceFilePath, destinationFilePath);
     }
 
     @Override
     public void copyFile(String sourceFilePath, String destinationFilePath) throws IOException {
-
+        fileUtility.copyFile(sourceFilePath, destinationFilePath);
     }
 
     @Override
     public void renameFile(String filePath, String newFileName) throws IOException {
-
+        fileUtility.renameFile(filePath, newFileName);
     }
 }
