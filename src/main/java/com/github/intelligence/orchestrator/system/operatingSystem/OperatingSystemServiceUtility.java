@@ -2,7 +2,7 @@ package com.github.intelligence.orchestrator.system.operatingSystem;
 
 import java.io.IOException;
 
-public class OperatingSystemServiceUtility {
+class OperatingSystemServiceUtility {
     private static String osName;
     private static String osVersion;
     private static String osArch;

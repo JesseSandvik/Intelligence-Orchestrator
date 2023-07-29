@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileSystemServiceUtility {
+class FileSystemServiceUtility {
     public List<String> listFiles(String directoryPath) {
         File directory = new File(directoryPath);
         List<String> fileNames = new ArrayList<>();
