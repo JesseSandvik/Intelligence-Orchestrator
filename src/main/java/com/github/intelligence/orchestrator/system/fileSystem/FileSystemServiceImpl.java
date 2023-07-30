@@ -1,5 +1,6 @@
 package com.github.intelligence.orchestrator.system.fileSystem;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FileSystemServiceImpl implements FileSystemService {
@@ -10,22 +11,22 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean createTempDirectory() {
+    public boolean createTempDirectory() throws IOException {
         return fileUtility.createTempDirectory();
     }
 
     @Override
-    public boolean createTempDirectory(String prefix) {
+    public boolean createTempDirectory(String prefix) throws IOException {
         return fileUtility.createTempDirectory(prefix);
     }
 
     @Override
-    public boolean createDirectory(String dirPath) {
+    public boolean createDirectory(String dirPath) throws IOException {
         return fileUtility.createDirectory(dirPath);
     }
 
     @Override
-    public boolean createFile(String filePath) {
+    public boolean createFile(String filePath) throws IOException {
         return fileUtility.createFile(filePath);
     }
 
@@ -50,17 +51,17 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean moveFile(String sourceFilePath, String destinationFilePath) {
-        return fileUtility.moveFile(sourceFilePath, destinationFilePath);
+    public void moveFile(String sourceFilePath, String destinationFilePath) throws IOException {
+        fileUtility.moveFile(sourceFilePath, destinationFilePath);
     }
 
     @Override
-    public boolean copyFile(String sourceFilePath, String destinationFilePath) {
-        return fileUtility.copyFile(sourceFilePath, destinationFilePath);
+    public void copyFile(String sourceFilePath, String destinationFilePath) throws IOException {
+        fileUtility.copyFile(sourceFilePath, destinationFilePath);
     }
 
     @Override
-    public boolean renameFile(String filePath, String newFileName) {
-        return fileUtility.renameFile(filePath, newFileName);
+    public void renameFile(String filePath, String newFileName) throws IOException {
+        fileUtility.renameFile(filePath, newFileName);
     }
 }

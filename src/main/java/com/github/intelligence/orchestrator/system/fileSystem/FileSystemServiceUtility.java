@@ -1,6 +1,7 @@
 package com.github.intelligence.orchestrator.system.fileSystem;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,60 +11,43 @@ import java.util.List;
 class FileSystemServiceUtility {
     private static String tempdir;
 
-    public boolean createTempDirectory() {
-        try {
-            Path createdTempDir = Files.createTempDirectory("temp");
+    public boolean createTempDirectory() throws IOException {
+        Path createdTempDir = Files.createTempDirectory("temp");
 
-            if (createdTempDir != null) {
-                createdTempDir.toFile().deleteOnExit();
-                tempdir = createdTempDir.toString();
-                return true;
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        if (createdTempDir != null) {
+            createdTempDir.toFile().deleteOnExit();
+            tempdir = createdTempDir.toString();
+            return true;
         }
         return false;
     }
 
-    public boolean createTempDirectory(String prefix) {
-        try {
-            Path createdTempDir = Files.createTempDirectory(prefix);
+    public boolean createTempDirectory(String prefix) throws IOException {
+        Path createdTempDir = Files.createTempDirectory(prefix);
 
-            if (createdTempDir != null) {
-                createdTempDir.toFile().deleteOnExit();
-                tempdir = createdTempDir.toString();
-                return true;
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        if (createdTempDir != null) {
+            createdTempDir.toFile().deleteOnExit();
+            tempdir = createdTempDir.toString();
+            return true;
         }
         return false;
     }
 
-    public boolean createDirectory(String dirPath) {
-        try {
-            File dirToCreate = new File(dirPath);
+    public boolean createDirectory(String dirPath) throws IOException {
+        File dirToCreate = new File(dirPath);
 
-            if (!dirToCreate.exists()) {
-                Files.createDirectories(dirToCreate.toPath());
-                return true;
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        if (!dirToCreate.exists()) {
+            Files.createDirectories(dirToCreate.toPath());
+            return true;
         }
         return false;
     }
 
-    public boolean createFile(String filePath) {
-        try {
-            File fileToCreate = new File(filePath);
+    public boolean createFile(String filePath) throws IOException {
+        File fileToCreate = new File(filePath);
 
-            if (!fileToCreate.exists()) {
-                return fileToCreate.createNewFile();
-            }
-            return false;
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        if (!fileToCreate.exists()) {
+            return fileToCreate.createNewFile();
         }
         return false;
     }
@@ -89,73 +73,41 @@ class FileSystemServiceUtility {
     }
 
     private boolean deleteAllFilesAndDirectories(Path parentDir) {
-        try {
-            File dirToDelete = parentDir.toFile();
-            File[] directoryContent = dirToDelete.listFiles();
+        File dirToDelete = parentDir.toFile();
+        File[] directoryContent = dirToDelete.listFiles();
 
-            if (directoryContent != null) {
-                for (File content : directoryContent) {
-                    deleteAllFilesAndDirectories(content.toPath());
-                }
+        if (directoryContent != null) {
+            for (File content : directoryContent) {
+                deleteAllFilesAndDirectories(content.toPath());
             }
-            return dirToDelete.delete();
-        } catch (Exception exception) {
-            exception.printStackTrace();
         }
-        return false;
+        return dirToDelete.delete();
     }
 
     public boolean deleteDirectoryWithContent(String dirPath) {
-        try {
-            return deleteAllFilesAndDirectories(Paths.get(dirPath));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return false;
+        return deleteAllFilesAndDirectories(Paths.get(dirPath));
     }
 
     public boolean deleteFile(String filePath) {
-        try {
-            File fileToDelete = new File(filePath);
+        File fileToDelete = new File(filePath);
 
-            if (fileToDelete.exists()) {
-                return fileToDelete.delete();
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        if (fileToDelete.exists()) {
+            return fileToDelete.delete();
         }
         return false;
     }
 
-    public boolean moveFile(String sourceFilePath, String destinationFilePath) {
-        try {
-            Files.move(Paths.get(sourceFilePath), Paths.get(destinationFilePath));
-            return true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return false;
+    public void moveFile(String sourceFilePath, String destinationFilePath) throws IOException {
+        Files.move(Paths.get(sourceFilePath), Paths.get(destinationFilePath));
     }
 
-    public boolean copyFile(String sourceFilePath, String destinationFilePath) {
-        try {
-            Files.copy(Paths.get(sourceFilePath), Paths.get(destinationFilePath));
-            return true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return false;
+    public void copyFile(String sourceFilePath, String destinationFilePath) throws IOException {
+        Files.copy(Paths.get(sourceFilePath), Paths.get(destinationFilePath));
     }
 
-    public boolean renameFile(String filePath, String newFileName) {
-        try {
-            Path path = Paths.get(filePath);
-            Path renamedPath = path.resolveSibling(newFileName);
-            Files.move(path, renamedPath);
-            return true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return false;
+    public void renameFile(String filePath, String newFileName) throws IOException {
+        Path path = Paths.get(filePath);
+        Path renamedPath = path.resolveSibling(newFileName);
+        Files.move(path, renamedPath);
     }
 }
