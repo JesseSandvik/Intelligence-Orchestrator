@@ -12,8 +12,13 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public Path createTempDirectoryWithPrefix(String prefix) {
+    public String createTempDirectoryWithPrefix(String prefix) {
         return fileUtility.createTempDirectoryWithPrefix(prefix);
+    }
+
+    @Override
+    public Boolean deleteDirectoryAndContent(String dirPath) {
+        return fileUtility.deleteDirectoryAndContent(dirPath);
     }
 
     @Override

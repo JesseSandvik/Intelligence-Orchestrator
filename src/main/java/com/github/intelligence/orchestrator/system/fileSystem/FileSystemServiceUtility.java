@@ -9,9 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FileSystemServiceUtility {
-    public Path createTempDirectoryWithPrefix(String prefix) {
+    public String createTempDirectoryWithPrefix(String prefix) {
         try {
-            return Files.createTempDirectory(prefix);
+            Path createdTempDir = Files.createTempDirectory(prefix);
+
+            if (createdTempDir != null) {
+                createdTempDir.toFile().deleteOnExit();
+                return createdTempDir.toString();
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -35,8 +40,14 @@ class FileSystemServiceUtility {
         }
     }
 
-    public void deleteDirectory(Path tempDir) {
-        deleteAllFilesAndDirectories(tempDir);
+    public boolean deleteDirectoryAndContent(String dir) {
+        try {
+            deleteAllFilesAndDirectories(Paths.get(dir));
+            return true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
     public List<String> listFiles(String directoryPath) {

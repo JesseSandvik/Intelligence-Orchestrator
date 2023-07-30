@@ -5,8 +5,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 public interface FileSystemService {
-    Path createTempDirectoryWithPrefix(String prefix);
-    List<String> listFiles(String directoryPath);
+    String createTempDirectoryWithPrefix(String prefix);
+    Boolean deleteDirectoryAndContent(String dirPath);
+    List<String> listFiles(String dirPath);
     boolean createFile(String filePath) throws IOException;
     boolean deleteFile(String filePath) throws IOException;
     void moveFile(String sourceFilePath, String destinationFilePath) throws IOException;
