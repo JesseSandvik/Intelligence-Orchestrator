@@ -11,19 +11,27 @@ public class Main {
         OperatingSystemServiceImpl osService = new OperatingSystemServiceImpl();
         FileSystemService fileService = new FileSystemServiceImpl();
 
-        System.out.println(fileService.listFiles(osService.getOperatingSystemUserDir()));
-
-//        String tempDir = fileService.createTempDirectoryWithPrefix("temp--");
         String tempPath = osService.getOperatingSystemTmpDir() + osService.getOperatingSystemFileSeparator() + "abcdir123";
-        fileService.createDirectory(tempPath + osService.getOperatingSystemFileSeparator() + "nested1");
-        String tempFileA = tempPath + osService.getOperatingSystemFileSeparator() + "testa1234";
-        String tempFileB = tempPath + osService.getOperatingSystemFileSeparator() + "testb5678";
-        fileService.createFile(tempFileA);
-        fileService.createFile(tempFileB);
-        System.out.println(tempPath);
-        System.out.println(tempFileA);
-        System.out.println(tempFileB);
+        String nestedTempPath = tempPath + osService.getOperatingSystemFileSeparator() + "nested1";
+        if (fileService.createTempDirectory()) {
+            System.out.println("CREATED DIRECTORY: " + fileService.getTempDirectory());
+        }
+//        String tempFileA = tempPath + osService.getOperatingSystemFileSeparator() + "testa1234";
+//        String tempFileB = tempPath + osService.getOperatingSystemFileSeparator() + "testb5678";
+//        if (fileService.createFile(tempFileA)) {
+//            System.out.println("CREATED FILE: " + tempFileA);
+//        }
+//
+//        if (fileService.createFile(tempFileB)) {
+//            System.out.println("CREATED FILE: " + tempFileB);
+//        }
+//
+//        System.out.println(tempPath);
+//        System.out.println(tempFileA);
+//        System.out.println(tempFileB);
 
-        fileService.deleteDirectoryAndContent(tempPath);
+//        if (fileService.deleteDirectoryAndContent(tempPath)) {
+//            System.out.println("DELETED DIRECTORY AMD ALL CONTENT: " + tempPath);
+//        }
     }
 }

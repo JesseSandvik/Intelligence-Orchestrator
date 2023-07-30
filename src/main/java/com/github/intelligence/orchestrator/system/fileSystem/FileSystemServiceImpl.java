@@ -1,7 +1,5 @@
 package com.github.intelligence.orchestrator.system.fileSystem;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public class FileSystemServiceImpl implements FileSystemService {
@@ -12,18 +10,18 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public String createTempDirectoryWithPrefix(String prefix) {
-        return fileUtility.createTempDirectoryWithPrefix(prefix);
+    public boolean createTempDirectory() {
+        return fileUtility.createTempDirectory();
     }
 
     @Override
-    public Boolean deleteDirectoryAndContent(String dirPath) {
-        return fileUtility.deleteDirectoryAndContent(dirPath);
+    public boolean createTempDirectory(String prefix) {
+        return fileUtility.createTempDirectory(prefix);
     }
 
     @Override
-    public List<String> listFiles(String directoryPath) {
-        return fileUtility.listFiles(directoryPath);
+    public boolean createDirectory(String dirPath) {
+        return fileUtility.createDirectory(dirPath);
     }
 
     @Override
@@ -32,27 +30,37 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
+    public List<String> listFiles(String dirPath) {
+        return fileUtility.listFiles(dirPath);
+    }
+
+    @Override
+    public String getTempDirectory() {
+        return fileUtility.getTempdir();
+    }
+
+    @Override
+    public boolean deleteDirectoryWithContent(String dirPath) {
+        return fileUtility.deleteDirectoryWithContent(dirPath);
+    }
+
+    @Override
     public boolean deleteFile(String filePath) {
         return fileUtility.deleteFile(filePath);
     }
 
     @Override
-    public void moveFile(String sourceFilePath, String destinationFilePath) throws IOException {
-        fileUtility.moveFile(sourceFilePath, destinationFilePath);
+    public boolean moveFile(String sourceFilePath, String destinationFilePath) {
+        return fileUtility.moveFile(sourceFilePath, destinationFilePath);
     }
 
     @Override
-    public void copyFile(String sourceFilePath, String destinationFilePath) throws IOException {
-        fileUtility.copyFile(sourceFilePath, destinationFilePath);
+    public boolean copyFile(String sourceFilePath, String destinationFilePath) {
+        return fileUtility.copyFile(sourceFilePath, destinationFilePath);
     }
 
     @Override
-    public void renameFile(String filePath, String newFileName) throws IOException {
-        fileUtility.renameFile(filePath, newFileName);
-    }
-
-    @Override
-    public boolean createDirectory(String dirPath) {
-        return fileUtility.createDirectory(dirPath);
+    public boolean renameFile(String filePath, String newFileName) {
+        return fileUtility.renameFile(filePath, newFileName);
     }
 }
