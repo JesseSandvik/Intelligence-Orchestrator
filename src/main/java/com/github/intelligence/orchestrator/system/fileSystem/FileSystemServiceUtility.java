@@ -9,36 +9,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FileSystemServiceUtility {
-    public boolean createTempDirectoryWithPrefix(String prefix) {
+    public Path createTempDirectoryWithPrefix(String prefix) {
         try {
-            Path newTempDir = Files.createTempDirectory(prefix);
-            System.out.println("Temporary directory created: " + newTempDir);
-            return true;
+            return Files.createTempDirectory(prefix);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return false;
         }
+        return null;
     }
 
-    private boolean deleteAllFilesAndDirectories(File directoryToDelete) {
+    private boolean deleteAllFilesAndDirectories(Path parentDir) {
         try {
-            File[] directoryContents = directoryToDelete.listFiles();
+            File dirToDelete = parentDir.toFile();
+            File[] directoryContent = dirToDelete.listFiles();
 
-            if (directoryContents != null) {
-                for (File content : directoryContents) {
-                    deleteAllFilesAndDirectories(content);
+            if (directoryContent != null) {
+                for (File content : directoryContent) {
+                    deleteAllFilesAndDirectories(content.toPath());
                 }
             }
-            return directoryToDelete.delete();
+            return dirToDelete.delete();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
     }
 
-    public void deleteTempDirectory(Path tempDir) {
-        deleteAllFilesAndDirectories(tempDir.toFile());
+    public void deleteDirectory(Path tempDir) {
+        deleteAllFilesAndDirectories(tempDir);
     }
+
     public List<String> listFiles(String directoryPath) {
         File directory = new File(directoryPath);
         List<String> fileNames = new ArrayList<>();
@@ -55,11 +55,16 @@ class FileSystemServiceUtility {
         return fileNames;
     }
 
-    public boolean createFile(String filePath) throws IOException {
-        File fileToCreate = new File(filePath);
+    public boolean createFile(String filePath) {
+        try {
+            File fileToCreate = new File(filePath);
 
-        if (!fileToCreate.exists()) {
-            return fileToCreate.createNewFile();
+            if (!fileToCreate.exists()) {
+                return fileToCreate.createNewFile();
+            }
+            return false;
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return false;
     }

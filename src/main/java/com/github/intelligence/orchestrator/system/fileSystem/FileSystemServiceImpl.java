@@ -1,6 +1,7 @@
 package com.github.intelligence.orchestrator.system.fileSystem;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 public class FileSystemServiceImpl implements FileSystemService {
@@ -11,7 +12,7 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public boolean createTempDirectoryWithPrefix(String prefix) {
+    public Path createTempDirectoryWithPrefix(String prefix) {
         return fileUtility.createTempDirectoryWithPrefix(prefix);
     }
 
@@ -21,13 +22,13 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     @Override
-    public void createFile(String filePath) throws IOException {
-        fileUtility.createFile(filePath);
+    public boolean createFile(String filePath) {
+        return fileUtility.createFile(filePath);
     }
 
     @Override
-    public void deleteFile(String filePath) throws IOException {
-        fileUtility.deleteFile(filePath);
+    public boolean deleteFile(String filePath) {
+        return fileUtility.deleteFile(filePath);
     }
 
     @Override
