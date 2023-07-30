@@ -13,15 +13,17 @@ public class Main {
 
         System.out.println(fileService.listFiles(osService.getOperatingSystemUserDir()));
 
-        String tempDir = fileService.createTempDirectoryWithPrefix("temp--");
-        String tempFileA = tempDir + osService.getOperatingSystemFileSeparator() + "test1234";
-        String tempFileB = tempDir + osService.getOperatingSystemFileSeparator() + "test5678";
+//        String tempDir = fileService.createTempDirectoryWithPrefix("temp--");
+        String tempPath = osService.getOperatingSystemTmpDir() + osService.getOperatingSystemFileSeparator() + "abcdir123";
+        fileService.createDirectory(tempPath + osService.getOperatingSystemFileSeparator() + "nested1");
+        String tempFileA = tempPath + osService.getOperatingSystemFileSeparator() + "testa1234";
+        String tempFileB = tempPath + osService.getOperatingSystemFileSeparator() + "testb5678";
         fileService.createFile(tempFileA);
         fileService.createFile(tempFileB);
-        System.out.println(tempDir);
+        System.out.println(tempPath);
         System.out.println(tempFileA);
         System.out.println(tempFileB);
 
-        fileService.deleteDirectoryAndContent(tempDir);
+        fileService.deleteDirectoryAndContent(tempPath);
     }
 }

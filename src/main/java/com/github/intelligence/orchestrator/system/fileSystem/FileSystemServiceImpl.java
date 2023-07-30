@@ -50,4 +50,9 @@ public class FileSystemServiceImpl implements FileSystemService {
     public void renameFile(String filePath, String newFileName) throws IOException {
         fileUtility.renameFile(filePath, newFileName);
     }
+
+    @Override
+    public boolean createDirectory(String dirPath) {
+        return fileUtility.createDirectory(dirPath);
+    }
 }

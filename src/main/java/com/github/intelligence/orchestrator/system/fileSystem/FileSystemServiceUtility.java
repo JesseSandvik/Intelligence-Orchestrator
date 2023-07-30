@@ -102,4 +102,18 @@ class FileSystemServiceUtility {
         Path renamedPath = path.resolveSibling(newFileName);
         Files.move(path, renamedPath);
     }
+
+    public boolean createDirectory(String dirPath) {
+        try {
+            File dirToCreate = new File(dirPath);
+
+            if (!dirToCreate.exists()) {
+                Files.createDirectories(dirToCreate.toPath());
+                return true;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
 }

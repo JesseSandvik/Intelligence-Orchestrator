@@ -13,4 +13,5 @@ public interface FileSystemService {
     void moveFile(String sourceFilePath, String destinationFilePath) throws IOException;
     void copyFile(String sourceFilePath, String destinationFilePath) throws IOException;
     void renameFile(String filePath, String newFileName) throws IOException;
+    boolean createDirectory(String dirPath);
 }
