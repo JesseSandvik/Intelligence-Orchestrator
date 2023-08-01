@@ -1,21 +1,16 @@
 package com.github.intelligence.orchestrator;
 
+import com.github.intelligence.orchestrator.system.fileSystem.FileSystemServiceContract;
 import com.github.intelligence.orchestrator.system.fileSystem.FileSystemService;
-import com.github.intelligence.orchestrator.system.fileSystem.FileSystemServiceImpl;
-import com.github.intelligence.orchestrator.system.operatingSystem.OperatingSystemServiceImpl;
+import com.github.intelligence.orchestrator.system.operatingSystem.OperatingSystemService;
 
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        OperatingSystemServiceImpl osService = new OperatingSystemServiceImpl();
-        FileSystemService fileService = new FileSystemServiceImpl();
-
-        String tempPath = osService.getOperatingSystemTmpDir() + osService.getOperatingSystemFileSeparator() + "abcdir123";
-        String nestedTempPath = tempPath + osService.getOperatingSystemFileSeparator() + "nested1";
-        if (fileService.createTempDirectory()) {
-            System.out.println("CREATED DIRECTORY: " + fileService.getTempDirectory());
-        }
+        OperatingSystemService osService = new OperatingSystemService();
+        FileSystemServiceContract fsService = new FileSystemService();
+        String tempDir = fsService.createTempDirectory();
 //        String tempFileA = tempPath + osService.getOperatingSystemFileSeparator() + "testa1234";
 //        String tempFileB = tempPath + osService.getOperatingSystemFileSeparator() + "testb5678";
 //        if (fileService.createFile(tempFileA)) {

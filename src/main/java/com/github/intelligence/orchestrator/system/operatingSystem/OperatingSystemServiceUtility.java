@@ -14,7 +14,7 @@ class OperatingSystemServiceUtility {
     private static String userHome;
     private static String userDir;
 
-    public String getTmpDir() {
+    public String getTempDirectory() {
         if (tmpdir == null) {
             tmpdir = System.getProperty("java.io.tmpdir");
         }
@@ -35,7 +35,7 @@ class OperatingSystemServiceUtility {
         return osVersion;
     }
 
-    public String getOSArch() {
+    public String getOSArchitecture() {
         if (osArch == null) {
             osArch = System.getProperty("os.arch");
         }
@@ -77,7 +77,7 @@ class OperatingSystemServiceUtility {
         return userHome;
     }
 
-    public String getUserDir() {
+    public String getUserDirectory() {
         if (userDir == null) {
             userDir = System.getProperty("user.dir");
         }

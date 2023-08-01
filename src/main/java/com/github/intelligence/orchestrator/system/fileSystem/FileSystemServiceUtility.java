@@ -9,28 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FileSystemServiceUtility {
-    private static String tempdir;
 
-    public boolean createTempDirectory() throws IOException {
+    public String createTempDirectory() throws IOException {
         Path createdTempDir = Files.createTempDirectory("temp");
-
-        if (createdTempDir != null) {
-            createdTempDir.toFile().deleteOnExit();
-            tempdir = createdTempDir.toString();
-            return true;
-        }
-        return false;
+        createdTempDir.toFile().deleteOnExit();
+        return createdTempDir.toString();
     }
 
-    public boolean createTempDirectory(String prefix) throws IOException {
+    public String createTempDirectory(String prefix) throws IOException {
         Path createdTempDir = Files.createTempDirectory(prefix);
-
-        if (createdTempDir != null) {
-            createdTempDir.toFile().deleteOnExit();
-            tempdir = createdTempDir.toString();
-            return true;
-        }
-        return false;
+        createdTempDir.toFile().deleteOnExit();
+        return createdTempDir.toString();
     }
 
     public boolean createDirectory(String dirPath) throws IOException {
@@ -66,10 +55,6 @@ class FileSystemServiceUtility {
             }
         }
         return fileNames;
-    }
-
-    public String getTempdir() {
-        return tempdir;
     }
 
     private boolean deleteAllFilesAndDirectories(Path parentDir) {
