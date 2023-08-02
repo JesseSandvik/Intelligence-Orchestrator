@@ -11,12 +11,21 @@ class CommandServiceUtility {
         rootSpec.name(rootCmdName);
     }
 
+    public void enableStandardHelpOptions(boolean enableHelp) {
+        rootSpec.mixinStandardHelpOptions(enableHelp);
+    }
+
     public void printUsageMessage() {
         CommandLine cmd = new CommandLine(rootSpec);
         cmd.usage(System.out);
     }
 
-    public void enableStandardHelpOptions(boolean enableHelp) {
-        rootSpec.mixinStandardHelpOptions(enableHelp);
+    public void setVersion(String rootCmdVersion) {
+        rootSpec.version(rootCmdVersion);
+    }
+
+    public void run(String[] args) {
+        int exitCode = new CommandLine(rootSpec).execute(args);
+        System.exit(exitCode);
     }
 }
