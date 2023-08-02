@@ -18,6 +18,11 @@ public class CommandService implements CommandServiceContract {
     }
 
     @Override
+    public void setDescription(String description) {
+        cmdUtility.setDescription(description);
+    }
+
+    @Override
     public void setVersion(String rootCmdVersion) {
         cmdUtility.setVersion(rootCmdVersion);
     }

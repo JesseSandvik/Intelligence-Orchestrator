@@ -20,6 +20,11 @@ class CommandServiceUtility {
         cmd.usage(System.out);
     }
 
+    public void setDescription(String description) {
+        rootSpec.usageMessage()
+                .description(description);
+    }
+
     public void setVersion(String rootCmdVersion) {
         rootSpec.version(rootCmdVersion);
     }

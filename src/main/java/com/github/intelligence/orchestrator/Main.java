@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         cmdService.enableStandardHelpOptions(true);
         cmdService.setVersion("[IO] version 1.0");
-//        cmdService.printUsageMessage();
+        cmdService.setDescription("This is the description");
         cmdService.run(args);
     }
 }
