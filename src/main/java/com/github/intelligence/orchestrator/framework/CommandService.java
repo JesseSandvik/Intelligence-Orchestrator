@@ -13,7 +13,7 @@ public class CommandService implements CommandServiceContract {
     }
 
     @Override
-    public void setUsageMessageHeader() {
-        cmdUtility.setUsageMessageHeader();
+    public void enableStandardHelpOptions(boolean enableHelp) {
+        cmdUtility.enableStandardHelpOptions(enableHelp);
     }
 }

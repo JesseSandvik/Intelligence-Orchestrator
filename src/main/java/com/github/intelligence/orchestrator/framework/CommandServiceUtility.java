@@ -8,8 +8,7 @@ class CommandServiceUtility {
 
     public CommandServiceUtility(String rootCmdName) {
         rootSpec = CommandSpec.create();
-        rootSpec.name(rootCmdName)
-                .mixinStandardHelpOptions(true);
+        rootSpec.name(rootCmdName);
     }
 
     public void printUsageMessage() {
@@ -17,8 +16,7 @@ class CommandServiceUtility {
         cmd.usage(System.out);
     }
 
-    public void setUsageMessageHeader() {
-        rootSpec.usageMessage()
-                .abbreviateSynopsis(true);
+    public void enableStandardHelpOptions(boolean enableHelp) {
+        rootSpec.mixinStandardHelpOptions(enableHelp);
     }
 }

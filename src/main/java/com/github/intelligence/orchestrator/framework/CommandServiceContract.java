@@ -4,5 +4,5 @@ import picocli.CommandLine.Command;
 
 public interface CommandServiceContract {
     void printUsageMessage();
-    void setUsageMessageHeader();
+    void enableStandardHelpOptions(boolean enableHelp);
 }
