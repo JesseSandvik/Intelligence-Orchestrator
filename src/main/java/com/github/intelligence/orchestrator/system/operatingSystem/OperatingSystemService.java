@@ -5,7 +5,7 @@ import java.io.IOException;
 public class OperatingSystemService implements OperatingSystemServiceContract {
     private final OperatingSystemServiceUtility osUtility;
     public OperatingSystemService() {
-        this.osUtility = new OperatingSystemServiceUtility();
+        osUtility = new OperatingSystemServiceUtility();
     }
 
     @Override

@@ -7,7 +7,7 @@ public class FileSystemService implements FileSystemServiceContract {
     private final FileSystemServiceUtility fsUtility;
 
     public FileSystemService() {
-        this.fsUtility = new FileSystemServiceUtility();
+        fsUtility = new FileSystemServiceUtility();
     }
 
     @Override
