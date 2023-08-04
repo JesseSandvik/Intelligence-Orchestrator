@@ -84,4 +84,49 @@ public class PicocliServiceTest {
 
         assertEquals(errContent.toString(), "");
     }
+
+    @Test
+    void printUsageForUnmatchedArgument() {
+        picoService.run("testing123");
+
+        assertTrue(errContent.toString().contains("Unmatched argument at index 0: 'testing123'"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printUsageForUnknownOptionShort() {
+        picoService.run("-do-something");
+
+        assertTrue(errContent.toString().contains("Unknown option: '-do-something'"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printUsageForUnknownOptionLong() {
+        picoService.run("--do-something");
+
+        assertTrue(errContent.toString().contains("Unknown option: '--do-something'"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
 }
