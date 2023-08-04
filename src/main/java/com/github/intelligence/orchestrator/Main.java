@@ -1,13 +1,10 @@
 package com.github.intelligence.orchestrator;
 
-import com.github.intelligence.orchestrator.framework.CommandService;
+import com.github.intelligence.orchestrator.picocli.PicocliService;
 
 public class Main {
-        private static final CommandService cmdService = new CommandService("io");
     public static void main(String[] args) {
-        cmdService.enableStandardHelpOptions(true);
-        cmdService.setVersion("[IO] version 1.0");
-        cmdService.setDescription("This is the description");
-        cmdService.run(args);
+        PicocliService cliService = new PicocliService("io", "[IO] Version 1.0.0");
+        cliService.run("-V");
     }
 }
