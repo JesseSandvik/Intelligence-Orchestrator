@@ -4,18 +4,13 @@ import picocli.CommandLine;
 import picocli.CommandLine.Model.*;
 
 class PicocliServiceUtility {
-    private final CommandSpec rootSpec;
+    private static CommandSpec rootSpec;
 
     public PicocliServiceUtility(String rootCmdName, String rootCmdVersion) {
         rootSpec = CommandSpec.create();
         rootSpec.name(rootCmdName)
                 .version(rootCmdVersion)
                 .mixinStandardHelpOptions(true);
-    }
-
-    public void addSubcommand(String subCmdName) {
-        CommandSpec subSpec = CommandSpec.create();
-        rootSpec.addSubcommand(subCmdName, subSpec);
     }
 
     public void printUsage() {

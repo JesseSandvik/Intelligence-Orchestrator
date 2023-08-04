@@ -1,30 +1,17 @@
 package com.github.intelligence.orchestrator.picocli;
 
 public class PicocliService implements PicocliServiceContract {
-
-    private static PicocliServiceUtility picoService;
+    private static PicocliServiceUtility picocliService;
 
     public PicocliService(String rootCmdName, String rootCmdVersion) {
-        picoService = new PicocliServiceUtility(rootCmdName, rootCmdVersion);
+        picocliService = new PicocliServiceUtility(rootCmdName, rootCmdVersion);
     }
 
-    @Override
-    public void addSubcommand(String subCmdName) {
-        picoService.addSubcommand(subCmdName);
-    }
-
-    @Override
-    public void printUsage() {
-        picoService.printUsage();
-    }
-
-    @Override
     public void run() {
-        picoService.run();
+        picocliService.run();
     }
 
-    @Override
     public void run(String arg) {
-        picoService.run(arg);
+        picocliService.run(arg);
     }
 }

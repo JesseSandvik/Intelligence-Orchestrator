@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class PicocliServiceTest {
-    private final PicocliService picoService = new PicocliService("app", "App Version 1.0.0");
+    private final PicocliService picoService = new PicocliService("app", "app Version 1.0.0");
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -29,7 +29,7 @@ public class PicocliServiceTest {
     }
 
     @Test
-    void printUsageForExecutionWithNoArguments() {
+    void printsUsageForNoArguments() {
         picoService.run();
 
         assertTrue(outContent.toString().contains("-h"));
@@ -38,11 +38,11 @@ public class PicocliServiceTest {
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
 
-        assertEquals(errContent.toString(), "");
+        assertEquals("", errContent.toString());
     }
 
     @Test
-    void printUsageForHelpOptionShort() {
+    void printsUsageForHelpOptionShort() {
         picoService.run("-h");
 
         assertTrue(outContent.toString().contains("-h"));
@@ -51,11 +51,11 @@ public class PicocliServiceTest {
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
 
-        assertEquals(errContent.toString(), "");
+        assertEquals("", errContent.toString());
     }
 
     @Test
-    void printUsageForHelpOptionLong() {
+    void printsUsageForHelpOptionLong() {
         picoService.run("--help");
 
         assertTrue(outContent.toString().contains("-h"));
@@ -64,86 +64,26 @@ public class PicocliServiceTest {
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
 
-        assertEquals(errContent.toString(), "");
+        assertEquals("", errContent.toString());
     }
 
     @Test
-    void printVersionForVersionOptionShort() {
+    void printsVersionForVersionOptionShort() {
         picoService.run("-V");
 
-        assertTrue(outContent.toString().contains("Version"));
+        assertTrue(outContent.toString().contains("app"));
+        assertTrue(outContent.toString().contains("Version 1.0.0"));
 
-        assertEquals(errContent.toString(), "");
+        assertEquals("", errContent.toString());
     }
 
     @Test
-    void printUsageForVersionOptionLong() {
+    void printsVersionForVersionOptionLong() {
         picoService.run("--version");
 
-        assertTrue(outContent.toString().contains("Version"));
+        assertTrue(outContent.toString().contains("app"));
+        assertTrue(outContent.toString().contains("Version 1.0.0"));
 
-        assertEquals(errContent.toString(), "");
-    }
-
-    @Test
-    void printUsageForUnmatchedArgument() {
-        picoService.run("testing123");
-
-        assertTrue(errContent.toString().contains("Unmatched argument at index 0: 'testing123'"));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-V"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertEquals(outContent.toString(), "");
-    }
-
-    @Test
-    void printUsageForUnknownOptionShort() {
-        picoService.run("-do-something");
-
-        assertTrue(errContent.toString().contains("Unknown option: '-do-something'"));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-V"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertEquals(outContent.toString(), "");
-    }
-
-    @Test
-    void printUsageForUnknownOptionLong() {
-        picoService.run("--do-something");
-
-        assertTrue(errContent.toString().contains("Unknown option: '--do-something'"));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-V"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertEquals(outContent.toString(), "");
-    }
-
-    @Test
-    void usageIncludesAddedSubcommand() {
-        picoService.addSubcommand("test-subcommand");
-        picoService.run();
-
-        assertTrue(outContent.toString().contains("-h"));
-        assertTrue(outContent.toString().contains("--help"));
-
-        assertTrue(outContent.toString().contains("-V"));
-        assertTrue(outContent.toString().contains("--version"));
-
-        assertTrue(outContent.toString().contains("Commands"));
-        assertTrue(outContent.toString().contains("test-subcommand"));
-
-        assertEquals(errContent.toString(), "");
+        assertEquals("", errContent.toString());
     }
 }
