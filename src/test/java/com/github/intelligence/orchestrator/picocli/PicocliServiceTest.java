@@ -129,4 +129,21 @@ public class PicocliServiceTest {
 
         assertEquals(outContent.toString(), "");
     }
+
+    @Test
+    void usageIncludesAddedSubcommand() {
+        picoService.addSubcommand("test-subcommand");
+        picoService.run();
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-V"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertTrue(outContent.toString().contains("Commands"));
+        assertTrue(outContent.toString().contains("test-subcommand"));
+
+        assertEquals(errContent.toString(), "");
+    }
 }

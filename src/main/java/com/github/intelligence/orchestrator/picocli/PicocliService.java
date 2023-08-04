@@ -9,6 +9,11 @@ public class PicocliService implements PicocliServiceContract {
     }
 
     @Override
+    public void addSubcommand(String subCmdName) {
+        picoService.addSubcommand(subCmdName);
+    }
+
+    @Override
     public void printUsage() {
         picoService.printUsage();
     }
