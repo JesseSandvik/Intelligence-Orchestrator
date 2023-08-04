@@ -13,7 +13,9 @@ class PicocliServiceUtility {
                 .mixinStandardHelpOptions(true);
     }
 
-    public void addSubcommand(String subCmdName) {}
+    public void addSubcommand(String subCmdName) {
+        rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection((Runnable) () -> {}));
+    }
 
     public void printUsage() {
         new CommandLine(rootSpec).usage(System.out);

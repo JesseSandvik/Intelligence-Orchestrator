@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         PropertiesService propertiesService = new PropertiesService("/io.properties");
         PicocliService cliService = new PicocliService("io", "[IO] Version " + propertiesService.getProperty("version"));
+        cliService.addSubcommand("echo");
 
         cliService.run();
     }
