@@ -7,6 +7,10 @@ public class PicocliService implements PicocliServiceContract {
         picocliService = new PicocliServiceUtility(rootCmdName, rootCmdVersion);
     }
 
+    public void addSubcommand(String subCmdName) {
+        picocliService.addSubcommand(subCmdName);
+    }
+
     public void run() {
         picocliService.run();
     }
