@@ -103,4 +103,23 @@ public class PicocliServiceTest {
 
         assertEquals("", errContent.toString());
     }
+
+    @Test
+    void printsActionableUsageForUnmatchedArgumentException() {
+        picoService.run("bad-command");
+
+        assertTrue(errContent.toString().contains("bad-command"));
+        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertTrue(errContent.toString().contains("Commands:"));
+        assertTrue(errContent.toString().contains("test123"));
+
+        assertEquals("", outContent.toString());
+    }
 }
