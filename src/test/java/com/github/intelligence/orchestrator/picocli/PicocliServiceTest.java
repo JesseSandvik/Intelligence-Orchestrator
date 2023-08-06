@@ -89,7 +89,7 @@ public class PicocliServiceTest {
 
     @Test
     void subcommandIsIncludedInUsageInformation() {
-        picoService.addSubcommand("test123");
+        picoService.addSubcommand("test123", () -> {});
         picoService.run();
 
         assertTrue(outContent.toString().contains("-h"));
@@ -105,8 +105,8 @@ public class PicocliServiceTest {
     }
 
     @Test
-    void printsActionableUsageForUnmatchedArgumentException() {
-        picoService.addSubcommand("test123");
+    void printsActionableUsageForUnmatchedParameter() {
+        picoService.addSubcommand("test123", () -> {});
         picoService.run("bad-command");
 
         assertTrue(errContent.toString().contains("bad-command"));

@@ -14,8 +14,8 @@ class PicocliServiceUtility {
                 .mixinStandardHelpOptions(true);
     }
 
-    public void addSubcommand(String subCmdName) {
-        rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection((Runnable) () -> {}));
+    public void addSubcommand(String subCmdName, Runnable subCmd) {
+        rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection(subCmd));
     }
 
     private IParameterExceptionHandler handleUnmatchedArgumentAtFirstIndex(CommandLine cmd) {
