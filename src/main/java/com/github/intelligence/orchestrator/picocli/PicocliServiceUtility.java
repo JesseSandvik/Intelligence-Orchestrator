@@ -11,11 +11,34 @@ class PicocliServiceUtility {
         rootSpec = CommandSpec.create();
         rootSpec.name(rootCmdName)
                 .version(rootCmdVersion)
-                .mixinStandardHelpOptions(true);
+                .usageMessage()
+                .commandListHeading("\nCommands:%n")
+                .optionListHeading("\nOptions:%n")
+                .parameterListHeading("\nPositional Parameters:%n");
+        rootSpec.mixinStandardHelpOptions(true);
     }
 
     public void addSubcommand(String subCmdName, Runnable subCmd) {
         rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection(subCmd));
+        rootSpec.usageMessage().commandListHeading();
+
+        CommandLine currentSubCmd = rootSpec.subcommands().get(subCmdName);
+        CommandSpec subCmdSpec = currentSubCmd.getCommandSpec();
+        subCmdSpec.usageMessage()
+                .customSynopsis(rootSpec.name() + " " + subCmdName)
+                .optionListHeading("\nOptions:%n")
+                .parameterListHeading("\nPositional Parameters:%n");
+        subCmdSpec.mixinStandardHelpOptions(true);
+    }
+
+    public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {
+        CommandLine subCmd = rootSpec.subcommands().get(subCmdName);
+        CommandSpec subCmdSpec = subCmd.getCommandSpec();
+
+        subCmdSpec.addPositional(PositionalParamSpec.builder()
+                .paramLabel(paramLabel)
+                .type(paramType)
+                .description(paramDescription).build());
     }
 
     private IParameterExceptionHandler handleUnmatchedArgumentAtFirstIndex(CommandLine cmd) {
@@ -57,9 +80,13 @@ class PicocliServiceUtility {
     }
 
     public void run(String[] args) {
-        CommandLine rootCmd = new CommandLine(rootSpec);
+        if (args.length == 0) {
+            printUsage();
+        } else {
+            CommandLine rootCmd = new CommandLine(rootSpec);
 
-        rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(args);
+            rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(args);
+        }
     }
 
 }

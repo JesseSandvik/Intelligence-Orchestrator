@@ -11,7 +11,9 @@ public class PicocliService implements PicocliServiceContract {
         picocliService.addSubcommand(subCmdName, subCmd);
     }
 
-    public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {}
+    public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {
+        picocliService.addParameterForSubcommand(subCmdName, paramLabel, paramType, paramDescription);
+    }
 
     public void run() {
         picocliService.run();
