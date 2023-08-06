@@ -1,6 +1,7 @@
 package com.github.intelligence.orchestrator.picocli;
 
 import picocli.CommandLine;
+import picocli.CommandLine.*;
 import picocli.CommandLine.Model.*;
 
 class PicocliServiceUtility {
@@ -17,6 +18,30 @@ class PicocliServiceUtility {
         rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection((Runnable) () -> {}));
     }
 
+    private IParameterExceptionHandler handleUnmatchedArgumentAtFirstIndex(CommandLine cmd) {
+        return new IParameterExceptionHandler() {
+
+            final IParameterExceptionHandler defaultHandler = cmd.getParameterExceptionHandler();
+            @Override
+            public int handleParseException(ParameterException e, String[] strings) throws Exception {
+
+                if (e instanceof UnmatchedArgumentException) {
+                    CommandLine rootCmd = e.getCommandLine();
+                    String firstUnmatchedArgument = ((UnmatchedArgumentException) e).getUnmatched().get(0);
+
+                    if (!firstUnmatchedArgument.startsWith("-")) {
+                        String rootCmdName = rootCmd.getCommandName();
+                        rootCmd.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + rootCmdName + ".");
+                        rootCmd.getErr().println("Please refer to the 'Commands' section for available commands.\n");
+                        rootCmd.usage(rootCmd.getErr());
+                        return rootCmd.getCommandSpec().exitCodeOnInvalidInput();
+                    }
+                }
+                return defaultHandler.handleParseException(e, strings);
+            }
+        };
+    }
+
     public void printUsage() {
         new CommandLine(rootSpec).usage(System.out);
     }
@@ -26,6 +51,15 @@ class PicocliServiceUtility {
     }
 
     public void run(String arg) {
-        new CommandLine(rootSpec).execute(arg);
+        CommandLine rootCmd = new CommandLine(rootSpec);
+
+        rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(arg);
     }
+
+    public void run(String[] args) {
+        CommandLine rootCmd = new CommandLine(rootSpec);
+
+        rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(args);
+    }
+
 }

@@ -106,6 +106,7 @@ public class PicocliServiceTest {
 
     @Test
     void printsActionableUsageForUnmatchedArgumentException() {
+        picoService.addSubcommand("test123");
         picoService.run("bad-command");
 
         assertTrue(errContent.toString().contains("bad-command"));

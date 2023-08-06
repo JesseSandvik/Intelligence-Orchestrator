@@ -18,4 +18,8 @@ public class PicocliService implements PicocliServiceContract {
     public void run(String arg) {
         picocliService.run(arg);
     }
+
+    public void run(String[] args) {
+        picocliService.run(args);
+    }
 }

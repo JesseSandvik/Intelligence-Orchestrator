@@ -11,6 +11,6 @@ public class Main {
         PicocliService cliService = new PicocliService("io", "[IO] Version " + propertiesService.getProperty("version"));
         cliService.addSubcommand("echo");
 
-        cliService.run();
+        cliService.run(args);
     }
 }
