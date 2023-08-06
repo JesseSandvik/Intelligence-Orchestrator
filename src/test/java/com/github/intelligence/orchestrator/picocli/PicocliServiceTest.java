@@ -123,4 +123,28 @@ public class PicocliServiceTest {
 
         assertEquals("", outContent.toString());
     }
+
+    @Test
+    void subcommandParameterIsIncludedInUsageInformation() {
+        String subCmdName = "test123";
+        String subCmdParamLabel = "do-this";
+        String subCmdParamDescription = "I want to do something.";
+
+        picoService.addSubcommand("test123", () -> {});
+        picoService.addParameterForSubcommand(subCmdName, subCmdParamLabel, String.class, subCmdParamDescription);
+        picoService.run();
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-V"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertTrue(outContent.toString().contains("Commands:"));
+        assertTrue(outContent.toString().contains(subCmdName));
+        assertTrue(outContent.toString().contains(subCmdParamLabel));
+        assertTrue(outContent.toString().contains(subCmdParamDescription));
+
+        assertEquals("", errContent.toString());
+    }
 }
