@@ -45,14 +45,17 @@ class PicocliServiceUtility {
                 if (e instanceof UnmatchedArgumentException) {
                     CommandLine rootCmd = e.getCommandLine();
                     String firstUnmatchedArgument = ((UnmatchedArgumentException) e).getUnmatched().get(0);
+                    String rootCmdName = rootCmd.getCommandName();
 
-                    if (!firstUnmatchedArgument.startsWith("-")) {
-                        String rootCmdName = rootCmd.getCommandName();
+                    if (firstUnmatchedArgument.startsWith("-")) {
+                        rootCmd.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + rootCmdName + ".");
+                        rootCmd.getErr().println("Please refer to the 'Options' section for available options.\n");
+                    } else {
                         rootCmd.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + rootCmdName + ".");
                         rootCmd.getErr().println("Please refer to the 'Commands' section for available commands.\n");
-                        rootCmd.usage(rootCmd.getErr());
-                        return rootCmd.getCommandSpec().exitCodeOnInvalidInput();
                     }
+                    rootCmd.usage(rootCmd.getErr());
+                    return rootCmd.getCommandSpec().exitCodeOnInvalidInput();
                 }
                 return defaultHandler.handleParseException(e, strings);
             }
