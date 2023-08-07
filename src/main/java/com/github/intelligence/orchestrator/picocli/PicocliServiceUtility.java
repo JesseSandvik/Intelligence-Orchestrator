@@ -15,13 +15,14 @@ class PicocliServiceUtility {
         setStandardizedUsageForCommandSpec(rootSpec);
     }
 
-    public void addSubcommand(String subCmdName, Runnable subCmd) {
+    public void addSubcommand(String subCmdName, String subCmdVersion, Runnable subCmd) {
         rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection(subCmd));
         rootSpec.usageMessage().commandListHeading();
 
         CommandLine currentSubCmd = rootSpec.subcommands().get(subCmdName);
         CommandSpec subCmdSpec = currentSubCmd.getCommandSpec();
 
+        subCmdSpec.version(subCmdVersion);
         setStandardizedUsageForCommandSpec(subCmdSpec);
     }
 
