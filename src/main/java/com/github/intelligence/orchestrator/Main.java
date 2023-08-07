@@ -13,6 +13,6 @@ public class Main {
         cliService.addSubcommand("echo", new EchoCommand());
         cliService.addParameterForSubcommand("echo", "message", String.class, "The message to be output from echo.");
 
-        cliService.run(args);
+        cliService.run("--badoption");
     }
 }

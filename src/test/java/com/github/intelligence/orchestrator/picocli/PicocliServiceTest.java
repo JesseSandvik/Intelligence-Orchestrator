@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
 
 public class PicocliServiceTest {
     private final PicocliService picoService = new PicocliService("app", "app Version 1.0.0");
@@ -103,6 +102,26 @@ public class PicocliServiceTest {
         assertTrue(outContent.toString().contains("test123"));
 
         assertEquals("", errContent.toString());
+    }
+
+    @Test
+    void printsActionableUsageForUnknownOption() {
+        picoService.addSubcommand("test123", () -> {});
+        picoService.run("--bad-option");
+
+        assertTrue(errContent.toString().contains("--bad-option"));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertTrue(errContent.toString().contains("Commands:"));
+        assertTrue(errContent.toString().contains("test123"));
+
+        assertEquals("", outContent.toString());
     }
 
     @Test
