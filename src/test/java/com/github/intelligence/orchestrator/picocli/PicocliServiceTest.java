@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.List;
 
 public class PicocliServiceTest {
     private final PicocliService picoService = new PicocliService("app", "app Version 1.0.0");
@@ -125,25 +126,25 @@ public class PicocliServiceTest {
     }
 
     @Test
-    void subcommandParameterIsIncludedInUsageInformation() {
+    void subcommandUsageInformationIncludesPositionalParameter() {
         String subCmdName = "test123";
         String subCmdParamLabel = "do-this";
         String subCmdParamDescription = "I want to do something.";
 
-        picoService.addSubcommand("test123", () -> {});
+        picoService.addSubcommand(subCmdName, () -> {});
         picoService.addParameterForSubcommand(subCmdName, subCmdParamLabel, String.class, subCmdParamDescription);
-        picoService.run();
+        String[] args = {subCmdName, "--help"};
+        picoService.run(args);
+
+        assertTrue(outContent.toString().contains(subCmdName));
+        assertTrue(outContent.toString().contains(subCmdParamLabel));
+        assertTrue(outContent.toString().contains(subCmdParamDescription));
 
         assertTrue(outContent.toString().contains("-h"));
         assertTrue(outContent.toString().contains("--help"));
 
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
-
-        assertTrue(outContent.toString().contains("Commands:"));
-        assertTrue(outContent.toString().contains(subCmdName));
-        assertTrue(outContent.toString().contains(subCmdParamLabel));
-        assertTrue(outContent.toString().contains(subCmdParamDescription));
 
         assertEquals("", errContent.toString());
     }

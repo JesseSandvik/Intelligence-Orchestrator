@@ -10,12 +10,9 @@ class PicocliServiceUtility {
     public PicocliServiceUtility(String rootCmdName, String rootCmdVersion) {
         rootSpec = CommandSpec.create();
         rootSpec.name(rootCmdName)
-                .version(rootCmdVersion)
-                .usageMessage()
-                .commandListHeading("\nCommands:%n")
-                .optionListHeading("\nOptions:%n")
-                .parameterListHeading("\nPositional Parameters:%n");
-        rootSpec.mixinStandardHelpOptions(true);
+                .version(rootCmdVersion);
+
+        setStandardizedUsageForCommandSpec(rootSpec);
     }
 
     public void addSubcommand(String subCmdName, Runnable subCmd) {
@@ -24,11 +21,8 @@ class PicocliServiceUtility {
 
         CommandLine currentSubCmd = rootSpec.subcommands().get(subCmdName);
         CommandSpec subCmdSpec = currentSubCmd.getCommandSpec();
-        subCmdSpec.usageMessage()
-                .customSynopsis(rootSpec.name() + " " + subCmdName)
-                .optionListHeading("\nOptions:%n")
-                .parameterListHeading("\nPositional Parameters:%n");
-        subCmdSpec.mixinStandardHelpOptions(true);
+
+        setStandardizedUsageForCommandSpec(subCmdSpec);
     }
 
     public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {
@@ -63,6 +57,15 @@ class PicocliServiceUtility {
                 return defaultHandler.handleParseException(e, strings);
             }
         };
+    }
+
+    private void setStandardizedUsageForCommandSpec(CommandSpec cmdSpec) {
+        cmdSpec.mixinStandardHelpOptions(true);
+
+        cmdSpec.usageMessage()
+                .commandListHeading("\nCommands:%n")
+                .optionListHeading("\nOptions:%n")
+                .parameterListHeading("\nParameters:%n");
     }
 
     public void printUsage() {
