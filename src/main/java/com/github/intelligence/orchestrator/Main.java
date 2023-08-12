@@ -7,12 +7,20 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        PropertiesService propertiesService = new PropertiesService("/root.properties");
+        PropertiesService rootCommandPropertiesService = new PropertiesService("/rootcommand.properties");
         PicocliService cliService = new PicocliService(
-                propertiesService.getProperty("app.command"),
-                propertiesService.getProperty("app.name"),
-                propertiesService.getProperty("app.description"),
-                propertiesService.getProperty("app.version")
+                rootCommandPropertiesService.getProperty("app.command"),
+                rootCommandPropertiesService.getProperty("app.name"),
+                rootCommandPropertiesService.getProperty("app.description"),
+                rootCommandPropertiesService.getProperty("app.version")
+        );
+
+        PropertiesService subcommandPropertiesService = new PropertiesService("/subcommand.properties");
+        cliService.addSubcommand(
+                subcommandPropertiesService.getProperty("subcommand.command"),
+                subcommandPropertiesService.getProperty("subcommand.description"),
+                subcommandPropertiesService.getProperty("subcommand.version"),
+                () -> {}
         );
 
         cliService.run(args);

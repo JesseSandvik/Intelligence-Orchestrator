@@ -7,29 +7,25 @@ import picocli.CommandLine.Model.*;
 class PicocliServiceUtility {
     private static CommandSpec rootSpec;
 
-    public PicocliServiceUtility(String rootCommand, String rootCommandName, String rootCommandDescription, String rootCommandVersion) {
-        String formattedVersionHeader = "[ " + rootCommand.toUpperCase() + " | " + rootCommandName + " | Version " + rootCommandVersion + " ]";
+    public PicocliServiceUtility(String rootCommandName, String applicationName, String rootCommandDescription, String rootCommandVersion) {
+        String formattedVersionHeader = "[ " + rootCommandName.toUpperCase() + " | " + applicationName + " | Version " + rootCommandVersion + " ]";
 
         rootSpec = CommandSpec.create();
-        rootSpec.name(rootCommand)
+        rootSpec.name(rootCommandName)
                 .version(formattedVersionHeader);
 
         rootSpec.usageMessage().headerHeading(formattedVersionHeader + "%n\n");
-        rootSpec.usageMessage().footer("\n" + rootCommandDescription);
-        rootSpec.usageMessage().abbreviateSynopsis(true);
-        rootSpec.usageMessage().autoWidth(true);
-        setStandardizedUsageForCommandSpec(rootSpec);
+        setStandardizedUsageForCommandSpec(rootSpec, rootCommandDescription);
     }
 
-    public void addSubcommand(String subCmdName, String subCmdVersion, Runnable subCmd) {
-        rootSpec.addSubcommand(subCmdName, CommandSpec.wrapWithoutInspection(subCmd));
+    public void addSubcommand(String subcommandName, String subcommandDescription, String subcommandVersion , Runnable subcommand) {
+        rootSpec.addSubcommand(subcommandName, CommandSpec.wrapWithoutInspection(subcommand));
         rootSpec.usageMessage().commandListHeading();
 
-        CommandLine currentSubCmd = rootSpec.subcommands().get(subCmdName);
-        CommandSpec subCmdSpec = currentSubCmd.getCommandSpec();
+        CommandSpec currentSubcommandSpec = rootSpec.subcommands().get(subcommandName).getCommandSpec();
 
-        subCmdSpec.version(subCmdVersion);
-        setStandardizedUsageForCommandSpec(subCmdSpec);
+        currentSubcommandSpec.version(subcommandVersion);
+        setStandardizedUsageForCommandSpec(currentSubcommandSpec, subcommandDescription);
     }
 
     public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {
@@ -69,13 +65,16 @@ class PicocliServiceUtility {
         };
     }
 
-    private void setStandardizedUsageForCommandSpec(CommandSpec cmdSpec) {
-        cmdSpec.mixinStandardHelpOptions(true);
+    private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandDescription) {
+        commandSpec.mixinStandardHelpOptions(true);
 
-        cmdSpec.usageMessage()
+        commandSpec.usageMessage()
+                .abbreviateSynopsis(true)
+                .autoWidth(true)
                 .commandListHeading("\nCommands:%n")
                 .optionListHeading("\nOptions:%n")
-                .parameterListHeading("\nParameters:%n");
+                .parameterListHeading("\nParameters:%n")
+                .footer("\n" + commandDescription);
     }
 
     public void printUsage() {

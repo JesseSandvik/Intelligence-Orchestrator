@@ -3,12 +3,12 @@ package com.github.intelligence.orchestrator.picocli;
 public class PicocliService implements PicocliServiceContract {
     private static PicocliServiceUtility picocliService;
 
-    public PicocliService(String rootCommand, String rootCommandName, String rootCommandDescription, String rootCommandVersion) {
-        picocliService = new PicocliServiceUtility(rootCommand, rootCommandName, rootCommandDescription, rootCommandVersion);
+    public PicocliService(String rootCommandName, String applicationName, String rootCommandDescription, String rootCommandVersion) {
+        picocliService = new PicocliServiceUtility(rootCommandName, applicationName, rootCommandDescription, rootCommandVersion);
     }
 
-    public void addSubcommand(String subCmdName, String subCmdVersion, Runnable subCmd) {
-        picocliService.addSubcommand(subCmdName, subCmdVersion, subCmd);
+    public void addSubcommand(String subcommandName, String subcommandDescription, String subcommandVersion, Runnable subcommand) {
+        picocliService.addSubcommand(subcommandName, subcommandDescription, subcommandVersion, subcommand);
     }
 
     public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {

@@ -95,8 +95,9 @@ public class PicocliServiceTest {
     @Test
     void subcommandIsIncludedInUsageInformation() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         picoService.run();
 
         assertTrue(outContent.toString().contains("-h"));
@@ -114,8 +115,9 @@ public class PicocliServiceTest {
     @Test
     void printsActionableUsageForUnknownOption() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         picoService.run("--bad-option");
 
         assertTrue(errContent.toString().contains("--bad-option"));
@@ -136,8 +138,9 @@ public class PicocliServiceTest {
     @Test
     void printsActionableUsageForUnmatchedParameter() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         picoService.run("bad-command");
 
         assertTrue(errContent.toString().contains("bad-command"));
@@ -158,9 +161,10 @@ public class PicocliServiceTest {
     @Test
     void printsSubcommandVersionForSubcommandVersionOptionShort() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
 
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         String[] args = {subCmdName, "-V"};
         picoService.run(args);
 
@@ -173,9 +177,10 @@ public class PicocliServiceTest {
     @Test
     void printsSubcommandVersionForSubcommandVersionOptionLong() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
 
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         String[] args = {subCmdName, "--version"};
         picoService.run(args);
 
@@ -188,11 +193,12 @@ public class PicocliServiceTest {
     @Test
     void printsSubcommandUsageForSubcommandHelpOptionShort() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
         String subCmdParamLabel = "do-this";
         String subCmdParamDescription = "I want to do something.";
 
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         picoService.addParameterForSubcommand(subCmdName, subCmdParamLabel, String.class, subCmdParamDescription);
         String[] args = {subCmdName, "-h"};
         picoService.run(args);
@@ -213,11 +219,12 @@ public class PicocliServiceTest {
     @Test
     void printsSubcommandUsageForSubcommandHelpOptionLong() {
         String subCmdName = "test123";
+        String subcommandDescription = "This is a sample subcommand for testing.";
         String subCmdVersion = subCmdName + " Version 1.0.0";
         String subCmdParamLabel = "do-this";
         String subCmdParamDescription = "I want to do something.";
 
-        picoService.addSubcommand(subCmdName, subCmdVersion,() -> {});
+        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
         picoService.addParameterForSubcommand(subCmdName, subCmdParamLabel, String.class, subCmdParamDescription);
         String[] args = {subCmdName, "--help"};
         picoService.run(args);
