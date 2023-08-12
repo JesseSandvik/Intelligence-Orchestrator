@@ -10,7 +10,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class PicocliServiceTest {
-    private final PicocliService picoService = new PicocliService("app", "app Version 1.0.0");
+    private final PicocliService picoService = new PicocliService(
+            "app",
+            "test-app",
+            "This is a test application",
+            "1.0.0"
+    );
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;

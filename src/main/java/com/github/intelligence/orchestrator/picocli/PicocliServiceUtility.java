@@ -7,11 +7,17 @@ import picocli.CommandLine.Model.*;
 class PicocliServiceUtility {
     private static CommandSpec rootSpec;
 
-    public PicocliServiceUtility(String rootCmdName, String rootCmdVersion) {
-        rootSpec = CommandSpec.create();
-        rootSpec.name(rootCmdName)
-                .version(rootCmdVersion);
+    public PicocliServiceUtility(String rootCommand, String rootCommandName, String rootCommandDescription, String rootCommandVersion) {
+        String formattedVersionHeader = "[ " + rootCommand.toUpperCase() + " | " + rootCommandName + " | Version " + rootCommandVersion + " ]";
 
+        rootSpec = CommandSpec.create();
+        rootSpec.name(rootCommand)
+                .version(formattedVersionHeader);
+
+        rootSpec.usageMessage().headerHeading(formattedVersionHeader + "%n\n");
+        rootSpec.usageMessage().footer("\n" + rootCommandDescription);
+        rootSpec.usageMessage().abbreviateSynopsis(true);
+        rootSpec.usageMessage().autoWidth(true);
         setStandardizedUsageForCommandSpec(rootSpec);
     }
 
@@ -91,7 +97,6 @@ class PicocliServiceUtility {
             printUsage();
         } else {
             CommandLine rootCmd = new CommandLine(rootSpec);
-
             rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(args);
         }
     }
