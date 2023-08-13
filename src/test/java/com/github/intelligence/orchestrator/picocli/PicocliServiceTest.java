@@ -273,4 +273,73 @@ public class PicocliServiceTest {
 
         assertEquals(errContent.toString(), "");
     }
+
+    @Test
+    void printsActionableUsageForUnknownSubcommandOptionShort() {
+        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+
+        String badShortOption = "-bad-short-option";
+        String[] args = {subcommand, badShortOption};
+        picoService.run(args);
+
+        assertTrue(errContent.toString().contains(badShortOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(subcommand));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForUnknownSubcommandOptionLong() {
+        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+
+        String badLongOption = "--bad-long-option";
+        String[] args = {subcommand, badLongOption};
+        picoService.run(args);
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(subcommand));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForSubcommandUnmatchedParameter() {
+        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+
+        String unmatchedParameter = "bad-command";
+        String[] args = {subcommand, unmatchedParameter};
+        picoService.run(args);
+
+        assertTrue(errContent.toString().contains(unmatchedParameter));
+        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
+
+        assertTrue(errContent.toString().contains(subcommand));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
 }
