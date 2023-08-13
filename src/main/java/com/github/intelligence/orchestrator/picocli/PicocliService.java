@@ -13,7 +13,9 @@ public class PicocliService implements PicocliServiceContract {
     }
 
     @Override
-    public void addParameterForSubcommand(String subcommand, String parameterLabel, Class<?> parameterType, String parameterDescription) {}
+    public void addParameterForSubcommand(String subcommand, String parameterLabel, Class<?> parameterType, String parameterDescription) {
+        picocliService.addParameterForSubcommand(subcommand, parameterLabel, parameterType, parameterDescription);
+    }
 
     public void run(String[] args) {
         picocliService.run(args);

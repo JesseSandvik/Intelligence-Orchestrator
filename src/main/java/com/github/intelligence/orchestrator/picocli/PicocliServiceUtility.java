@@ -26,6 +26,16 @@ class PicocliServiceUtility {
         setStandardizedUsageForCommandSpec(subcommandSpec, subcommandVersion, subcommandDescription);
     }
 
+    public void addParameterForSubcommand(String subcommand, String parameterLabel, Class<?> parameterType, String parameterDescription) {
+        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommand).getCommandSpec();
+
+        subcommandSpec.addPositional(PositionalParamSpec.builder()
+                .paramLabel(parameterLabel)
+                .type(parameterType)
+                .description(parameterDescription)
+                .build());
+    }
+
     private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandVersion, String commandDescription) {
         commandSpec
                 .mixinStandardHelpOptions(true)

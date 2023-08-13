@@ -39,6 +39,8 @@ public class Main {
                 subcommandDescription,
                 () -> {}
         );
+        String formattedSubcommandFirstParameter = "[TEXT]";
+        cliService.addParameterForSubcommand(subcommand, formattedSubcommandFirstParameter, String.class, "The text to be displayed as an output.");
 
         cliService.run(args);
     }
