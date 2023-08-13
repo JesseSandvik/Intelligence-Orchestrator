@@ -4,6 +4,8 @@ import picocli.CommandLine;
 import picocli.CommandLine.*;
 import picocli.CommandLine.Model.*;
 
+import static picocli.CommandLine.Model.CommandSpec.wrapWithoutInspection;
+
 class PicocliServiceUtility {
     private static CommandSpec rootSpec;
 
@@ -13,6 +15,15 @@ class PicocliServiceUtility {
                 .version(rootCommandVersion);
 
         setStandardizedUsageForCommandSpec(rootSpec, rootCommandVersion, rootCommandDescription);
+    }
+
+    public void addSubcommand(String subcommand, String subcommandVersion, String subcommandDescription, Runnable subcommandOperation) {
+        rootSpec.addSubcommand(subcommand, wrapWithoutInspection(subcommandOperation));
+
+        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommand).getCommandSpec();
+        subcommandSpec.version(subcommandVersion);
+
+        setStandardizedUsageForCommandSpec(subcommandSpec, subcommandVersion, subcommandDescription);
     }
 
     private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandVersion, String commandDescription) {
@@ -41,10 +52,14 @@ class PicocliServiceUtility {
                     String currentCommandName = currentCommand.getCommandName();
 
                     if (firstUnmatchedArgument.startsWith("-")) {
-                        currentCommand.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + currentCommandName + ".");
+                        String unknownOptionMessage = "'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + currentCommandName + ".";
+
+                        currentCommand.getErr().println(unknownOptionMessage);
                         currentCommand.getErr().println("Please refer to the 'Options' section for available options.\n");
                     } else {
-                        currentCommand.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + currentCommandName + ".");
+                        String unmatchedParameterMessage = "'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + currentCommandName + ".";
+
+                        currentCommand.getErr().println(unmatchedParameterMessage);
                         currentCommand.getErr().println("Please refer to the 'Commands' section for available command.\n");
                     }
                     currentCommand.usage(currentCommand.getErr());
@@ -59,13 +74,22 @@ class PicocliServiceUtility {
         new CommandLine(commandSpec).usage(System.out);
     }
 
-    public void run(String[] args) {
-        if (args.length == 0) {
-            printUsageForCommandSpec(rootSpec);
-        } else {
-            CommandLine rootCommand = new CommandLine(rootSpec);
-            rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand)).execute(args);
+    private void handleSubcommandProvidedAsOnlyArgument(String[] args) {
+        CommandLine subcommand = rootSpec.subcommands().get(args[0]);
+
+        if (args.length == 1 && subcommand != null) {
+            printUsageForCommandSpec(subcommand.getCommandSpec());
         }
     }
 
+    public void run(String[] args) {
+        if (args.length >= 1) {
+            handleSubcommandProvidedAsOnlyArgument(args);
+
+            CommandLine rootCommand = new CommandLine(rootSpec);
+            rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand)).execute(args);
+        } else {
+            printUsageForCommandSpec(rootSpec);
+        }
+    }
 }
