@@ -10,12 +10,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class PicocliServiceTest {
+    private final String appRootCommand = "app";
+    private final String appRootName = "test-app";
+    private final String appRootDescription = "This is a test application";
+    private final String appRootVersion = "1.0.0";
     private final PicocliService picoService = new PicocliService(
-            "app",
-            "test-app",
-            "This is a test application",
-            "1.0.0"
+            appRootCommand,
+            appRootName,
+            appRootDescription,
+            appRootVersion
     );
+    private final String subcommandCommand = "test-command";
+    private final String subcommandDescription = "This is a sample subcommand for testing.";
+    private final String subcommandVersion = "1.0.0";
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -34,70 +41,126 @@ public class PicocliServiceTest {
     }
 
     @Test
-    void printsVersionForVersionOptionShort() {
+    void printsRootCommandVersionForRootCommandVersionOptionShort() {
         picoService.run("-V");
 
-        assertTrue(outContent.toString().contains("app"));
-        assertTrue(outContent.toString().contains("Version 1.0.0"));
+        assertTrue(outContent.toString().contains(appRootName));
+        assertTrue(outContent.toString().contains(appRootVersion));
 
-        assertEquals("", errContent.toString());
+        assertEquals(errContent.toString(), "");
     }
 
     @Test
-    void printsVersionForVersionOptionLong() {
+    void printsRootCommandVersionForRootCommandVersionOptionLong() {
         picoService.run("--version");
 
-        assertTrue(outContent.toString().contains("app"));
-        assertTrue(outContent.toString().contains("Version 1.0.0"));
+        assertTrue(outContent.toString().contains(appRootName));
+        assertTrue(outContent.toString().contains(appRootVersion));
 
-        assertEquals("", errContent.toString());
+        assertEquals(errContent.toString(), "");
     }
 
     @Test
-    void printsUsageForNoArguments() {
+    void printsRootCommandUsageForRootCommandWithNoArguments() {
         picoService.run();
 
+        assertTrue(outContent.toString().contains(appRootCommand));
+
         assertTrue(outContent.toString().contains("-h"));
         assertTrue(outContent.toString().contains("--help"));
 
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
 
-        assertEquals("", errContent.toString());
+        assertEquals(errContent.toString(), "");
     }
 
     @Test
-    void printsUsageForHelpOptionShort() {
+    void printsRootCommandUsageForRootCommandHelpOptionShort() {
         picoService.run("-h");
 
+        assertTrue(outContent.toString().contains(appRootCommand));
+
         assertTrue(outContent.toString().contains("-h"));
         assertTrue(outContent.toString().contains("--help"));
 
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
 
-        assertEquals("", errContent.toString());
+        assertEquals(errContent.toString(), "");
     }
 
     @Test
-    void printsUsageForHelpOptionLong() {
+    void printsRootCommandUsageForRootCommandHelpOptionLong() {
         picoService.run("--help");
 
+        assertTrue(outContent.toString().contains(appRootCommand));
+
         assertTrue(outContent.toString().contains("-h"));
         assertTrue(outContent.toString().contains("--help"));
 
         assertTrue(outContent.toString().contains("-V"));
         assertTrue(outContent.toString().contains("--version"));
 
-        assertEquals("", errContent.toString());
+        assertEquals(errContent.toString(), "");
     }
 
     @Test
-    void subcommandIsIncludedInUsageInformation() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
+    void printsActionableUsageForUnknownRootCommandOptionShort() {
+        String badShortOption = "-bad-short-option";
+        picoService.run(badShortOption);
+
+        assertTrue(errContent.toString().contains(badShortOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForUnknownRootCommandOptionLong() {
+        String badLongOption = "--bad-long-option";
+        picoService.run(badLongOption);
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForRootCommandUnmatchedParameter() {
+        String unmatchedParameter = "bad-command";
+        picoService.run(unmatchedParameter);
+
+        assertTrue(errContent.toString().contains(unmatchedParameter));
+        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-V"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void addedSubcommandIsIncludedInRootCommandUsageInformation() {
+
+        picoService.addSubcommand(subcommandCommand, subcommandDescription, subcommandVersion, () -> {
+        });
         picoService.run();
 
         assertTrue(outContent.toString().contains("-h"));
@@ -107,138 +170,8 @@ public class PicocliServiceTest {
         assertTrue(outContent.toString().contains("--version"));
 
         assertTrue(outContent.toString().contains("Commands:"));
-        assertTrue(outContent.toString().contains(subCmdName));
+        assertTrue(outContent.toString().contains(subcommandCommand));
 
-        assertEquals("", errContent.toString());
-    }
-
-    @Test
-    void printsActionableUsageForUnknownOption() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
-        picoService.run("--bad-option");
-
-        assertTrue(errContent.toString().contains("--bad-option"));
-        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-V"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertTrue(errContent.toString().contains("Commands:"));
-        assertTrue(errContent.toString().contains("test123"));
-
-        assertEquals("", outContent.toString());
-    }
-
-    @Test
-    void printsActionableUsageForUnmatchedParameter() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
-        picoService.run("bad-command");
-
-        assertTrue(errContent.toString().contains("bad-command"));
-        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-V"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertTrue(errContent.toString().contains("Commands:"));
-        assertTrue(errContent.toString().contains("test123"));
-
-        assertEquals("", outContent.toString());
-    }
-
-    @Test
-    void printsSubcommandVersionForSubcommandVersionOptionShort() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
-        String[] args = {subCmdName, "-V"};
-        picoService.run(args);
-
-        assertTrue(outContent.toString().contains(subCmdName));
-        assertTrue(outContent.toString().contains(subCmdVersion));
-
-        assertEquals("", errContent.toString());
-    }
-
-    @Test
-    void printsSubcommandVersionForSubcommandVersionOptionLong() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
-        String[] args = {subCmdName, "--version"};
-        picoService.run(args);
-
-        assertTrue(outContent.toString().contains(subCmdName));
-        assertTrue(outContent.toString().contains(subCmdVersion));
-
-        assertEquals("", errContent.toString());
-    }
-
-    @Test
-    void printsSubcommandUsageForSubcommandHelpOptionShort() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-        String subCmdParamLabel = "do-this";
-        String subCmdParamDescription = "I want to do something.";
-
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
-        picoService.addParameterForSubcommand(subCmdName, subCmdParamLabel, String.class, subCmdParamDescription);
-        String[] args = {subCmdName, "-h"};
-        picoService.run(args);
-
-        assertTrue(outContent.toString().contains(subCmdName));
-        assertTrue(outContent.toString().contains(subCmdParamLabel));
-        assertTrue(outContent.toString().contains(subCmdParamDescription));
-
-        assertTrue(outContent.toString().contains("-h"));
-        assertTrue(outContent.toString().contains("--help"));
-
-        assertTrue(outContent.toString().contains("-V"));
-        assertTrue(outContent.toString().contains("--version"));
-
-        assertEquals("", errContent.toString());
-    }
-
-    @Test
-    void printsSubcommandUsageForSubcommandHelpOptionLong() {
-        String subCmdName = "test123";
-        String subcommandDescription = "This is a sample subcommand for testing.";
-        String subCmdVersion = subCmdName + " Version 1.0.0";
-        String subCmdParamLabel = "do-this";
-        String subCmdParamDescription = "I want to do something.";
-
-        picoService.addSubcommand(subCmdName, subcommandDescription, subCmdVersion,() -> {});
-        picoService.addParameterForSubcommand(subCmdName, subCmdParamLabel, String.class, subCmdParamDescription);
-        String[] args = {subCmdName, "--help"};
-        picoService.run(args);
-
-        assertTrue(outContent.toString().contains(subCmdName));
-        assertTrue(outContent.toString().contains(subCmdParamLabel));
-        assertTrue(outContent.toString().contains(subCmdParamDescription));
-
-        assertTrue(outContent.toString().contains("-h"));
-        assertTrue(outContent.toString().contains("--help"));
-
-        assertTrue(outContent.toString().contains("-V"));
-        assertTrue(outContent.toString().contains("--version"));
-
-        assertEquals("", errContent.toString());
+        assertEquals(errContent.toString(), "");
     }
 }
