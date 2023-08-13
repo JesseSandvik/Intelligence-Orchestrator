@@ -8,19 +8,16 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         PropertiesService rootCommandPropertiesService = new PropertiesService("/rootcommand.properties");
-        PicocliService cliService = new PicocliService(
-                rootCommandPropertiesService.getProperty("app.command"),
-                rootCommandPropertiesService.getProperty("app.name"),
-                rootCommandPropertiesService.getProperty("app.description"),
-                rootCommandPropertiesService.getProperty("app.version")
-        );
+        String rootCommand = rootCommandPropertiesService.getProperty("app.command");
+        String rootCommandVersion = rootCommandPropertiesService.getProperty("app.version");
+        String applicationName = rootCommandPropertiesService.getProperty("app.name");
+        String applicationDescription = rootCommandPropertiesService.getProperty("app.description");
 
-        PropertiesService subcommandPropertiesService = new PropertiesService("/subcommand.properties");
-        cliService.addSubcommand(
-                subcommandPropertiesService.getProperty("subcommand.command"),
-                subcommandPropertiesService.getProperty("subcommand.description"),
-                subcommandPropertiesService.getProperty("subcommand.version"),
-                () -> {}
+        String formattedRootCommandVersionInformation = "[ " + rootCommand.toUpperCase() + " | " + applicationName + " | Version " + rootCommandVersion + " ]";
+        PicocliService cliService = new PicocliService(
+                rootCommand,
+                formattedRootCommandVersionInformation,
+                applicationDescription
         );
 
         cliService.run(args);

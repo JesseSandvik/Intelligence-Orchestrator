@@ -7,68 +7,19 @@ import picocli.CommandLine.Model.*;
 class PicocliServiceUtility {
     private static CommandSpec rootSpec;
 
-    public PicocliServiceUtility(String rootCommandName, String applicationName, String rootCommandDescription, String rootCommandVersion) {
-        String formattedVersionHeader = "[ " + rootCommandName.toUpperCase() + " | " + applicationName + " | Version " + rootCommandVersion + " ]";
-
+    public PicocliServiceUtility(String rootCommand, String rootCommandVersion, String rootCommandDescription) {
         rootSpec = CommandSpec.create();
-        rootSpec.name(rootCommandName)
-                .version(formattedVersionHeader);
+        rootSpec.name(rootCommand)
+                .version(rootCommandVersion);
 
-        rootSpec.usageMessage().headerHeading(formattedVersionHeader + "%n\n");
-        setStandardizedUsageForCommandSpec(rootSpec, rootCommandDescription);
+        setStandardizedUsageForCommandSpec(rootSpec, rootCommandVersion, rootCommandDescription);
     }
 
-    public void addSubcommand(String subcommandName, String subcommandDescription, String subcommandVersion , Runnable subcommand) {
-        rootSpec.addSubcommand(subcommandName, CommandSpec.wrapWithoutInspection(subcommand));
-        rootSpec.usageMessage().commandListHeading();
-
-        CommandSpec currentSubcommandSpec = rootSpec.subcommands().get(subcommandName).getCommandSpec();
-
-        currentSubcommandSpec.version(subcommandVersion);
-        setStandardizedUsageForCommandSpec(currentSubcommandSpec, subcommandDescription);
-    }
-
-    public void addParameterForSubcommand(String subCmdName, String paramLabel, Class<?> paramType, String paramDescription) {
-        CommandLine subCmd = rootSpec.subcommands().get(subCmdName);
-        CommandSpec subCmdSpec = subCmd.getCommandSpec();
-
-        subCmdSpec.addPositional(PositionalParamSpec.builder()
-                .paramLabel(paramLabel)
-                .type(paramType)
-                .description(paramDescription).build());
-    }
-
-    private IParameterExceptionHandler handleUnmatchedArgumentAtFirstIndex(CommandLine cmd) {
-        return new IParameterExceptionHandler() {
-
-            final IParameterExceptionHandler defaultHandler = cmd.getParameterExceptionHandler();
-            @Override
-            public int handleParseException(ParameterException e, String[] strings) throws Exception {
-
-                if (e instanceof UnmatchedArgumentException) {
-                    CommandLine rootCmd = e.getCommandLine();
-                    String firstUnmatchedArgument = ((UnmatchedArgumentException) e).getUnmatched().get(0);
-                    String rootCmdName = rootCmd.getCommandName();
-
-                    if (firstUnmatchedArgument.startsWith("-")) {
-                        rootCmd.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + rootCmdName + ".");
-                        rootCmd.getErr().println("Please refer to the 'Options' section for available options.\n");
-                    } else {
-                        rootCmd.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + rootCmdName + ".");
-                        rootCmd.getErr().println("Please refer to the 'Commands' section for available commands.\n");
-                    }
-                    rootCmd.usage(rootCmd.getErr());
-                    return rootCmd.getCommandSpec().exitCodeOnInvalidInput();
-                }
-                return defaultHandler.handleParseException(e, strings);
-            }
-        };
-    }
-
-    private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandDescription) {
-        commandSpec.mixinStandardHelpOptions(true);
-
-        commandSpec.usageMessage()
+    private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandVersion, String commandDescription) {
+        commandSpec
+                .mixinStandardHelpOptions(true)
+                .usageMessage()
+                .headerHeading(commandVersion + "%n\n")
                 .abbreviateSynopsis(true)
                 .autoWidth(true)
                 .commandListHeading("\nCommands:%n")
@@ -77,26 +28,43 @@ class PicocliServiceUtility {
                 .footer("\n" + commandDescription);
     }
 
-    public void printUsage() {
-        new CommandLine(rootSpec).usage(System.out);
+    private IParameterExceptionHandler handleUnmatchedArgumentAtFirstIndex(CommandLine command) {
+        return new IParameterExceptionHandler() {
+
+            final IParameterExceptionHandler defaultHandler = command.getParameterExceptionHandler();
+            @Override
+            public int handleParseException(ParameterException exception, String[] strings) throws Exception {
+
+                if (exception instanceof UnmatchedArgumentException) {
+                    CommandLine currentCommand = exception.getCommandLine();
+                    String firstUnmatchedArgument = ((UnmatchedArgumentException) exception).getUnmatched().get(0);
+                    String currentCommandName = currentCommand.getCommandName();
+
+                    if (firstUnmatchedArgument.startsWith("-")) {
+                        currentCommand.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + currentCommandName + ".");
+                        currentCommand.getErr().println("Please refer to the 'Options' section for available options.\n");
+                    } else {
+                        currentCommand.getErr().println("'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + currentCommandName + ".");
+                        currentCommand.getErr().println("Please refer to the 'Commands' section for available command.\n");
+                    }
+                    currentCommand.usage(currentCommand.getErr());
+                    return currentCommand.getCommandSpec().exitCodeOnInvalidInput();
+                }
+                return defaultHandler.handleParseException(exception, strings);
+            }
+        };
     }
 
-    public void run() {
-        printUsage();
-    }
-
-    public void run(String arg) {
-        CommandLine rootCmd = new CommandLine(rootSpec);
-
-        rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(arg);
+    private void printUsageForCommandSpec(CommandSpec commandSpec) {
+        new CommandLine(commandSpec).usage(System.out);
     }
 
     public void run(String[] args) {
         if (args.length == 0) {
-            printUsage();
+            printUsageForCommandSpec(rootSpec);
         } else {
-            CommandLine rootCmd = new CommandLine(rootSpec);
-            rootCmd.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCmd)).execute(args);
+            CommandLine rootCommand = new CommandLine(rootSpec);
+            rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand)).execute(args);
         }
     }
 

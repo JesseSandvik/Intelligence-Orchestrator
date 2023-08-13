@@ -16,13 +16,9 @@ public class PicocliServiceTest {
     private final String appRootVersion = "1.0.0";
     private final PicocliService picoService = new PicocliService(
             appRootCommand,
-            appRootName,
-            appRootDescription,
-            appRootVersion
+            appRootVersion,
+            appRootDescription
     );
-    private final String subcommandCommand = "test-command";
-    private final String subcommandDescription = "This is a sample subcommand for testing.";
-    private final String subcommandVersion = "1.0.0";
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -42,9 +38,9 @@ public class PicocliServiceTest {
 
     @Test
     void printsRootCommandVersionForRootCommandVersionOptionShort() {
-        picoService.run("-V");
+        String[] args = {"-V"};
+        picoService.run(args);
 
-        assertTrue(outContent.toString().contains(appRootName));
         assertTrue(outContent.toString().contains(appRootVersion));
 
         assertEquals(errContent.toString(), "");
@@ -52,9 +48,9 @@ public class PicocliServiceTest {
 
     @Test
     void printsRootCommandVersionForRootCommandVersionOptionLong() {
-        picoService.run("--version");
+        String[] args = {"--version"};
+        picoService.run(args);
 
-        assertTrue(outContent.toString().contains(appRootName));
         assertTrue(outContent.toString().contains(appRootVersion));
 
         assertEquals(errContent.toString(), "");
@@ -62,7 +58,8 @@ public class PicocliServiceTest {
 
     @Test
     void printsRootCommandUsageForRootCommandWithNoArguments() {
-        picoService.run();
+        String[] args = {};
+        picoService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
 
@@ -77,7 +74,8 @@ public class PicocliServiceTest {
 
     @Test
     void printsRootCommandUsageForRootCommandHelpOptionShort() {
-        picoService.run("-h");
+        String[] args = {"-h"};
+        picoService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
 
@@ -92,7 +90,8 @@ public class PicocliServiceTest {
 
     @Test
     void printsRootCommandUsageForRootCommandHelpOptionLong() {
-        picoService.run("--help");
+        String[] args = {"--help"};
+        picoService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
 
@@ -108,7 +107,8 @@ public class PicocliServiceTest {
     @Test
     void printsActionableUsageForUnknownRootCommandOptionShort() {
         String badShortOption = "-bad-short-option";
-        picoService.run(badShortOption);
+        String[] args = {badShortOption};
+        picoService.run(args);
 
         assertTrue(errContent.toString().contains(badShortOption));
         assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
@@ -125,7 +125,8 @@ public class PicocliServiceTest {
     @Test
     void printsActionableUsageForUnknownRootCommandOptionLong() {
         String badLongOption = "--bad-long-option";
-        picoService.run(badLongOption);
+        String[] args = {badLongOption};
+        picoService.run(args);
 
         assertTrue(errContent.toString().contains(badLongOption));
         assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
@@ -142,7 +143,8 @@ public class PicocliServiceTest {
     @Test
     void printsActionableUsageForRootCommandUnmatchedParameter() {
         String unmatchedParameter = "bad-command";
-        picoService.run(unmatchedParameter);
+        String[] args = {unmatchedParameter};
+        picoService.run(args);
 
         assertTrue(errContent.toString().contains(unmatchedParameter));
         assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
@@ -154,24 +156,5 @@ public class PicocliServiceTest {
         assertTrue(errContent.toString().contains("--version"));
 
         assertEquals(outContent.toString(), "");
-    }
-
-    @Test
-    void addedSubcommandIsIncludedInRootCommandUsageInformation() {
-
-        picoService.addSubcommand(subcommandCommand, subcommandDescription, subcommandVersion, () -> {
-        });
-        picoService.run();
-
-        assertTrue(outContent.toString().contains("-h"));
-        assertTrue(outContent.toString().contains("--help"));
-
-        assertTrue(outContent.toString().contains("-V"));
-        assertTrue(outContent.toString().contains("--version"));
-
-        assertTrue(outContent.toString().contains("Commands:"));
-        assertTrue(outContent.toString().contains(subcommandCommand));
-
-        assertEquals(errContent.toString(), "");
     }
 }
