@@ -342,4 +342,30 @@ public class PicocliServiceTest {
 
         assertEquals(outContent.toString(), "");
     }
+
+    @Test
+    void addedParameterForSubcommandIsIncludedInSubcommandUsage() {
+        String subcommandParameter = "test-parameter";
+        String subcommandParameterDescription = "A sample parameter for testing purposes.";
+
+        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+        picoService.addParameterForSubcommand(subcommand, subcommandParameter, String.class, subcommandParameterDescription);
+
+        String[] args = {subcommand};
+        picoService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommand));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains(subcommandParameter));
+        assertTrue(outContent.toString().contains(subcommandParameterDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-V"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
 }
