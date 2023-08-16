@@ -1,17 +1,11 @@
 package com.github.intelligence.orchestrator;
 
-import com.github.intelligence.orchestrator.command.EchoCommand;
-import com.github.intelligence.orchestrator.picocli.PicocliService;
+import com.github.intelligence.orchestrator.commandLine.CommandLineService;
 import com.github.intelligence.orchestrator.properties.PropertiesService;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class Main {
-
-    private static String getFormattedVersion(String versionPrefix, String version) {
-        return "[ " + versionPrefix + " | Version " + version + " ]";
-    }
 
     public static void main(String[] args) throws IOException {
         PropertiesService rootCommandPropertiesService = new PropertiesService("/io.properties");
@@ -20,32 +14,16 @@ public class Main {
         String applicationName = rootCommandPropertiesService.getProperty("app.name");
         String applicationDescription = rootCommandPropertiesService.getProperty("app.description");
 
-        String formattedRootCommandVersion = getFormattedVersion(rootCommand.toUpperCase() + " | " + applicationName, rootCommandVersion);
+        String formattedRootCommandVersion = rootCommand + " | " + applicationName + " | Version " + rootCommandVersion;
 
-        PicocliService cliService = new PicocliService(
+        CommandLineService cliService = new CommandLineService(
                 rootCommand,
                 formattedRootCommandVersion,
                 applicationDescription
         );
 
-        PropertiesService subcommandPropertiesService = new PropertiesService("/echo.properties");
-        String subcommand = subcommandPropertiesService.getProperty("subcommand.command");
-        String subcommandVersion = subcommandPropertiesService.getProperty("subcommand.version");
-        String subcommandDescription = subcommandPropertiesService.getProperty("subcommand.description");
+        int exitCode = cliService.run(args);
 
-        String formattedSubcommandVersion = getFormattedVersion(subcommand.toUpperCase(), subcommandVersion);
-
-        String echoCommandArgument = args.length == 2 && Objects.equals(args[0], "echo") ? args[1] : "";
-
-        cliService.addSubcommand(
-                subcommand,
-                formattedSubcommandVersion,
-                subcommandDescription,
-                new EchoCommand(echoCommandArgument)
-        );
-        String formattedSubcommandFirstParameter = "[TEXT]";
-        cliService.addParameterForSubcommand(subcommand, formattedSubcommandFirstParameter, String.class, "The text to be displayed as an output.");
-
-        cliService.run(args);
+        System.exit(exitCode);
     }
 }

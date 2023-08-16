@@ -1,46 +1,38 @@
-package com.github.intelligence.orchestrator.picocli;
+package com.github.intelligence.orchestrator.commandLine;
 
 import picocli.CommandLine;
 import picocli.CommandLine.*;
 import picocli.CommandLine.Model.*;
 
-import static picocli.CommandLine.Model.CommandSpec.wrapWithoutInspection;
+import java.util.Objects;
 
 class PicocliServiceUtility {
     private static CommandSpec rootSpec;
 
-    public PicocliServiceUtility(String rootCommand, String rootCommandVersion, String rootCommandDescription) {
+    public PicocliServiceUtility(String rootCommandName, String rootCommandVersion, String rootCommandDescription) {
         rootSpec = CommandSpec.create();
-        rootSpec.name(rootCommand)
+        rootSpec.name(rootCommandName)
+                .optionsCaseInsensitive(true)
+                .subcommandsCaseInsensitive(true)
                 .version(rootCommandVersion);
 
-        setStandardizedUsageForCommandSpec(rootSpec, rootCommandVersion, rootCommandDescription);
+        setStandardizedUsageForCommandSpec(rootSpec, rootCommandDescription);
     }
 
-    public void addSubcommand(String subcommand, String subcommandVersion, String subcommandDescription, Runnable subcommandOperation) {
-        rootSpec.addSubcommand(subcommand, wrapWithoutInspection(subcommandOperation));
-
-        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommand).getCommandSpec();
-        subcommandSpec.version(subcommandVersion);
-
-        setStandardizedUsageForCommandSpec(subcommandSpec, subcommandVersion, subcommandDescription);
+    private CommandSpec setStandardOptions() {
+        return CommandSpec.create()
+                .addOption(OptionSpec.builder("-h", "--help")
+                        .usageHelp(true)
+                        .description("Show this help message and exit.").build())
+                .addOption(OptionSpec.builder("-v", "--version")
+                        .versionHelp(true)
+                        .description("Print version information and exit.").build());
     }
 
-    public void addParameterForSubcommand(String subcommand, String parameterLabel, Class<?> parameterType, String parameterDescription) {
-        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommand).getCommandSpec();
-
-        subcommandSpec.addPositional(PositionalParamSpec.builder()
-                .paramLabel(parameterLabel)
-                .type(parameterType)
-                .description(parameterDescription)
-                .build());
-    }
-
-    private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandVersion, String commandDescription) {
+    private void setStandardizedUsageForCommandSpec(CommandSpec commandSpec, String commandDescription) {
         commandSpec
-                .mixinStandardHelpOptions(true)
+                .addMixin("standardOptions", setStandardOptions())
                 .usageMessage()
-                .headerHeading(commandVersion + "%n\n")
                 .abbreviateSynopsis(true)
                 .autoWidth(true)
                 .commandListHeading("\nCommands:%n")
@@ -80,26 +72,15 @@ class PicocliServiceUtility {
         };
     }
 
-    private void printUsageForCommandSpec(CommandSpec commandSpec) {
-        new CommandLine(commandSpec).usage(System.out);
-    }
+    public int run(String[] args) {
+        CommandLine rootCommand = new CommandLine(rootSpec);
+        rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand));
 
-    private void handleSubcommandProvidedAsOnlyArgument(String[] args) {
-        CommandLine subcommand = rootSpec.subcommands().get(args[0]);
-
-        if (args.length == 1 && subcommand != null) {
-            printUsageForCommandSpec(subcommand.getCommandSpec());
-        }
-    }
-
-    public void run(String[] args) {
-        if (args.length >= 1) {
-            handleSubcommandProvidedAsOnlyArgument(args);
-
-            CommandLine rootCommand = new CommandLine(rootSpec);
-            rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand)).execute(args);
+        if (args.length == 0 || args.length == 1 && Objects.equals(args[0].toLowerCase(), "help")) {
+            rootCommand.usage(System.out);
+            return 0;
         } else {
-            printUsageForCommandSpec(rootSpec);
+            return rootCommand.execute(args);
         }
     }
 }
