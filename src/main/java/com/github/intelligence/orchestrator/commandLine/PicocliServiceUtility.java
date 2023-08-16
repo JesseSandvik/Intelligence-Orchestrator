@@ -4,7 +4,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.*;
 import picocli.CommandLine.Model.*;
 
-import java.util.Objects;
+import java.util.*;
 
 class PicocliServiceUtility {
     private static CommandSpec rootSpec;
@@ -54,10 +54,50 @@ class PicocliServiceUtility {
                     String currentCommandName = currentCommand.getCommandName();
 
                     if (firstUnmatchedArgument.startsWith("-")) {
-                        String unknownOptionMessage = "'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + currentCommandName + ".";
+                        List<OptionSpec> currentOptions = currentCommand.getCommandSpec().options();
 
-                        currentCommand.getErr().println(unknownOptionMessage);
-                        currentCommand.getErr().println("Please refer to the 'Options' section for available options.\n");
+                        for (OptionSpec optionSpec : currentOptions) {
+                            String optionLongestName = optionSpec.longestName();
+
+                            String firstUnmatchedArgumentWithoutHyphens = firstUnmatchedArgument.replace("-", "");
+                            String optionLongestNameWithoutHyphens = optionLongestName.replace("-", "");
+                            int matchingOptionCharCount = 0;
+
+                            for (int i = 0; i < optionLongestNameWithoutHyphens.length(); i++) {
+                                for (char unmatchedChar : firstUnmatchedArgumentWithoutHyphens.toCharArray()) {
+                                    for (char longestNameChar : optionLongestNameWithoutHyphens.toCharArray()) {
+                                        if (unmatchedChar == longestNameChar) {
+                                            matchingOptionCharCount += 1;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (matchingOptionCharCount >= optionLongestName.length() / 2) {
+                                Scanner scan = new Scanner(System.in);
+                                System.out.println("Did you mean " + optionLongestName + "? [y/n]");
+                                String userInput = scan.nextLine();
+                                
+                                if (userInput.equalsIgnoreCase("y") || userInput.equalsIgnoreCase("yes")) {
+                                    List<String> originalArguments = currentCommand.getParseResult().originalArgs();
+                                    String[] newArguments = new String[originalArguments.size()];
+
+                                    for (int i = 0; i < originalArguments.size(); i++) {
+                                        if (originalArguments.get(i).equals(firstUnmatchedArgument)) {
+                                            newArguments[i] = optionLongestName;
+                                        } else {
+                                            newArguments[i] = originalArguments.get(i);
+                                        }
+                                    }
+                                    return currentCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(currentCommand)).execute(newArguments);
+                                } else {
+                                    String unknownOptionMessage = "'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + currentCommandName + ".";
+
+                                    currentCommand.getErr().println(unknownOptionMessage);
+                                    currentCommand.getErr().println("Please refer to the 'Options' section for available options.\n");
+                                }
+                            }
+                        }
                     } else {
                         String unmatchedParameterMessage = "'" + firstUnmatchedArgument + "'" + " is not a recognized parameter or command for " + currentCommandName + ".";
 
