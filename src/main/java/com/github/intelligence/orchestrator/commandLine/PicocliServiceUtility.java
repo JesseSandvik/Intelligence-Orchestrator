@@ -61,19 +61,18 @@ class PicocliServiceUtility {
 
                             String firstUnmatchedArgumentWithoutHyphens = firstUnmatchedArgument.replace("-", "");
                             String optionLongestNameWithoutHyphens = optionLongestName.replace("-", "");
+                            char[] unmatchedArgumentCharacters = firstUnmatchedArgumentWithoutHyphens.toLowerCase().toCharArray();
+                            char[] optionsLongestNameCharacters = optionLongestNameWithoutHyphens.toLowerCase().toCharArray();
+                            int minLength = Math.min(unmatchedArgumentCharacters.length, optionsLongestNameCharacters.length);
                             int matchingOptionCharCount = 0;
 
-                            for (int i = 0; i < optionLongestNameWithoutHyphens.length(); i++) {
-                                for (char unmatchedChar : firstUnmatchedArgumentWithoutHyphens.toCharArray()) {
-                                    for (char longestNameChar : optionLongestNameWithoutHyphens.toCharArray()) {
-                                        if (unmatchedChar == longestNameChar) {
-                                            matchingOptionCharCount += 1;
-                                        }
-                                    }
+                            for (int i = 0; i < minLength; i++) {
+                                if (unmatchedArgumentCharacters[i] == optionsLongestNameCharacters[i]) {
+                                    matchingOptionCharCount+=1;
                                 }
                             }
 
-                            if (matchingOptionCharCount >= optionLongestName.length() / 2) {
+                            if (matchingOptionCharCount >= optionLongestNameWithoutHyphens.length() / 2) {
                                 Scanner scan = new Scanner(System.in);
                                 System.out.println("Did you mean " + optionLongestName + "? [y/n]");
                                 String userInput = scan.nextLine();
