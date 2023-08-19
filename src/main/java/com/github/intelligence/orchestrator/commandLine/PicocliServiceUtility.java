@@ -56,6 +56,10 @@ class PicocliServiceUtility {
         return matchingCharCount;
     }
 
+    private String getFormattedUnmatchedParameterAlertMessage(String unmatchedArgument, String parameterType, String commandName) {
+        return "'" + unmatchedArgument + "'" + " is not a recognized " + parameterType.toLowerCase() + " for " + commandName + ".";
+    }
+
     private IParameterExceptionHandler handleUnmatchedArgumentAtFirstIndex(CommandLine command) {
         return new IParameterExceptionHandler() {
 
@@ -68,42 +72,29 @@ class PicocliServiceUtility {
                     String[] updatedArguments = new String[originalArguments.size()];
 
                     Map<String, String> unmatchedArguments = new LinkedHashMap<>();
-                    for (String unmatchedArgument : ((UnmatchedArgumentException) exception).getUnmatched()) {
-                        if (unmatchedArgument.startsWith("-")) {
-                            unmatchedArguments.put(unmatchedArgument, "Option");
+                    for (String originalUnmatchedArgument : ((UnmatchedArgumentException) exception).getUnmatched()) {
+                        if (originalUnmatchedArgument.startsWith("-")) {
+                            unmatchedArguments.put(originalUnmatchedArgument, "Option");
                         } else {
-                            unmatchedArguments.put(unmatchedArgument, "Command");
+                            unmatchedArguments.put(originalUnmatchedArgument, "Command");
                         }
                     }
 
-                    List<String> availableSubcommandNames = new ArrayList<>(currentCommand.getSubcommands().keySet());
-                    List<String> availableOptionLongestNames = new ArrayList<>();
-                    currentCommand.getCommandSpec().options().forEach(option -> availableOptionLongestNames.add(option.longestName()));
-
+                    List<String> availableParameters = new ArrayList<>(currentCommand.getSubcommands().keySet());
+                    currentCommand.getCommandSpec().options().forEach(option -> availableParameters.add(option.longestName()));
 
                     Map<String, String> misspelledParameterCandidates = new LinkedHashMap<>();
-                    for (String unmatchedArgument : unmatchedArguments.keySet()) {
-                        char[] unmatchedArgumentCharacters = unmatchedArgument.replace("-", "").toLowerCase().toCharArray();
+                    for (String originalUnmatchedArgument : unmatchedArguments.keySet()) {
+                        char[] unmatchedArgumentCharacters = originalUnmatchedArgument.replace("-", "").toLowerCase().toCharArray();
 
-                        for (String subcommandName : availableSubcommandNames) {
+                        for (String availableParameter : availableParameters) {
                             int matchingCharacterCount = getMatchingCharacterCount(
                                     unmatchedArgumentCharacters,
-                                    subcommandName.replace("-", "").toLowerCase().toCharArray()
+                                    availableParameter.replace("-", "").toLowerCase().toCharArray()
                             );
 
-                            if (matchingCharacterCount >= subcommandName.length() / 2) {
-                                misspelledParameterCandidates.put(unmatchedArgument, subcommandName);
-                            }
-                        }
-
-                        for (String optionLongestName : availableOptionLongestNames) {
-                            int matchingCharacterCount = getMatchingCharacterCount(
-                                    unmatchedArgumentCharacters,
-                                    optionLongestName.replace("-", "").toLowerCase().toCharArray()
-                            );
-
-                            if (matchingCharacterCount >= optionLongestName.length() / 2) {
-                                misspelledParameterCandidates.put(unmatchedArgument, optionLongestName);
+                            if (matchingCharacterCount >= availableParameter.length() / 2) {
+                                misspelledParameterCandidates.put(originalUnmatchedArgument, availableParameter);
                             }
                         }
                     }
@@ -111,6 +102,7 @@ class PicocliServiceUtility {
                     if (!misspelledParameterCandidates.isEmpty()) {
                         for (Map.Entry<String, String> misspelledParameterCandidate : misspelledParameterCandidates.entrySet()) {
                             Scanner scan = new Scanner(System.in);
+                            currentCommand.getErr().println(getFormattedUnmatchedParameterAlertMessage(misspelledParameterCandidate.getKey(), unmatchedArguments.get(misspelledParameterCandidate.getKey()), currentCommand.getCommandName()));
                             System.out.println("Did you mean " + "'" + misspelledParameterCandidate.getValue() + "'? [y/n]");
                             String userResponse = scan.nextLine();
 
@@ -129,7 +121,7 @@ class PicocliServiceUtility {
                     }
 
                     for (Map.Entry<String, String> unmatchedArgument : unmatchedArguments.entrySet()) {
-                        currentCommand.getErr().println("'" + unmatchedArgument.getKey() + "'" + " is not a recognized " + unmatchedArgument.getValue().toLowerCase() + " for " + currentCommand.getCommandName() + ".");
+                        currentCommand.getErr().println(getFormattedUnmatchedParameterAlertMessage(unmatchedArgument.getKey(), unmatchedArgument.getValue(), currentCommand.getCommandName()));
                         currentCommand.getErr().println("Please refer to the '" + unmatchedArgument.getValue() + "s' section for available "+ currentCommand.getCommandName() + " " + unmatchedArgument.getValue().toLowerCase() + "s.\n");
                     }
 

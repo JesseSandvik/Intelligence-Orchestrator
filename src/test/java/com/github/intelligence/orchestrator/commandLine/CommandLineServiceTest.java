@@ -191,8 +191,6 @@ public class CommandLineServiceTest {
 
         assertTrue(outContent.toString().contains("-v"));
         assertTrue(outContent.toString().contains("--version"));
-
-        assertEquals(errContent.toString(), "");
     }
 
     @Test
