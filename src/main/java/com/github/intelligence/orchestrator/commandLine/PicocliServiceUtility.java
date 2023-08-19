@@ -74,7 +74,7 @@ class PicocliServiceUtility {
 
                             if (matchingOptionCharCount >= optionLongestNameWithoutHyphens.length() / 2) {
                                 Scanner scan = new Scanner(System.in);
-                                System.out.println("Did you mean " + optionLongestName + "? [y/n]");
+                                System.out.println("Did you mean " + "'" + optionLongestName + "'" + "? [y/n]");
                                 String userInput = scan.nextLine();
                                 
                                 if (userInput.equalsIgnoreCase("y") || userInput.equalsIgnoreCase("yes")) {
@@ -95,6 +95,11 @@ class PicocliServiceUtility {
                                     currentCommand.getErr().println(unknownOptionMessage);
                                     currentCommand.getErr().println("Please refer to the 'Options' section for available options.\n");
                                 }
+                            } else {
+                                String unknownOptionMessage = "'" + firstUnmatchedArgument + "'" + " is not a recognized option for " + currentCommandName + ".";
+
+                                currentCommand.getErr().println(unknownOptionMessage);
+                                currentCommand.getErr().println("Please refer to the 'Options' section for available options.\n");
                             }
                         }
                     } else {

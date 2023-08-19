@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 public class CommandLineServiceTest {
@@ -126,6 +128,54 @@ public class CommandLineServiceTest {
         assertTrue(outContent.toString().contains("--version"));
 
         assertEquals(errContent.toString(), "");
+    }
+
+    @Test
+    void detectsIntendedOptionLongAndExecutesOptionLongSuccessfullyWhenUserConfirmsYes() {
+        String input = "YES";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        String[] args = {"--halp"};
+        picoService.run(args);
+
+        assertTrue(outContent.toString().contains("Did you mean '--help'?"));
+
+        assertTrue(outContent.toString().contains(appRootCommand));
+        assertTrue(outContent.toString().contains(appRootDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
+
+    @Test
+    void detectsIntendedOptionLongAndPrintsActionableUsageWhenUserConfirmsNo() {
+        String input = "NO";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        String badLongOption = "--halp";
+        String[] args = {badLongOption};
+        picoService.run(args);
+
+        assertTrue(outContent.toString().contains("Did you mean '--help'?"));
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(appRootCommand));
+        assertTrue(errContent.toString().contains(appRootDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
     }
 
     @Test
