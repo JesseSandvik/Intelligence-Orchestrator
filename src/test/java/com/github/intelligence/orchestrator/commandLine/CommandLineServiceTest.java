@@ -131,6 +131,48 @@ public class CommandLineServiceTest {
     }
 
     @Test
+    void printsActionableUsageForUnknownRootCommandOptionShort() {
+        String badShortOption = "-bad-short-option";
+        String[] args = {badShortOption};
+        commandLineService.run(args);
+
+        assertTrue(errContent.toString().contains(badShortOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(appRootCommand));
+        assertTrue(errContent.toString().contains(appRootDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForUnknownRootCommandOptionLong() {
+        String badLongOption = "--bad-long-option";
+        String[] args = {badLongOption};
+        commandLineService.run(args);
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(appRootCommand));
+        assertTrue(errContent.toString().contains(appRootDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
     void detectsIntendedOptionLongAndExecutesOptionLongSuccessfullyWhenUserConfirmsYes() {
         String input = "YES";
         InputStream in = new ByteArrayInputStream(input.getBytes());
@@ -176,48 +218,6 @@ public class CommandLineServiceTest {
 
         assertTrue(errContent.toString().contains("-v"));
         assertTrue(errContent.toString().contains("--version"));
-    }
-
-    @Test
-    void printsActionableUsageForUnknownRootCommandOptionShort() {
-        String badShortOption = "-bad-short-option";
-        String[] args = {badShortOption};
-        commandLineService.run(args);
-
-        assertTrue(errContent.toString().contains(badShortOption));
-        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
-
-        assertTrue(errContent.toString().contains(appRootCommand));
-        assertTrue(errContent.toString().contains(appRootDescription));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-v"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertEquals(outContent.toString(), "");
-    }
-
-    @Test
-    void printsActionableUsageForUnknownRootCommandOptionLong() {
-        String badLongOption = "--bad-long-option";
-        String[] args = {badLongOption};
-        commandLineService.run(args);
-
-        assertTrue(errContent.toString().contains(badLongOption));
-        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
-
-        assertTrue(errContent.toString().contains(appRootCommand));
-        assertTrue(errContent.toString().contains(appRootDescription));
-
-        assertTrue(errContent.toString().contains("-h"));
-        assertTrue(errContent.toString().contains("--help"));
-
-        assertTrue(errContent.toString().contains("-v"));
-        assertTrue(errContent.toString().contains("--version"));
-
-        assertEquals(outContent.toString(), "");
     }
 
     @Test
