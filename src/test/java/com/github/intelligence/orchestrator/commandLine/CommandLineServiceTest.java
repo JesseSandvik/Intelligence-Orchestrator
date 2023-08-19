@@ -15,7 +15,7 @@ public class CommandLineServiceTest {
     private final String appRootCommand = "app";
     private final String appRootDescription = "This is a test application";
     private final String appRootVersion = "1.0.0";
-    private CommandLineService picoService;
+    private CommandLineService commandLineService;
     private final String subcommand = "test-subcommand";
     private final String subcommandDescription = "This is a sample subcommand for testing";
     private final String subcommandVersion = "1.2.3";
@@ -29,7 +29,7 @@ public class CommandLineServiceTest {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
 
-        picoService = new CommandLineService(
+        commandLineService = new CommandLineService(
                 appRootCommand,
                 appRootVersion,
                 appRootDescription
@@ -45,7 +45,7 @@ public class CommandLineServiceTest {
     @Test
     void printsRootCommandVersionForRootCommandVersionOptionShort() {
         String[] args = {"-v"};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains(appRootVersion));
 
@@ -55,7 +55,7 @@ public class CommandLineServiceTest {
     @Test
     void printsRootCommandVersionForRootCommandVersionOptionLong() {
         String[] args = {"--version"};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains(appRootVersion));
 
@@ -65,7 +65,7 @@ public class CommandLineServiceTest {
     @Test
     void printsRootCommandUsageForRootCommandWithNoArguments() {
         String[] args = {};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
         assertTrue(outContent.toString().contains(appRootDescription));
@@ -82,7 +82,7 @@ public class CommandLineServiceTest {
     @Test
     void printsRootCommandUsageForRootCommandWithHelpAsOnlyArgument() {
         String[] args = {"help"};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
         assertTrue(outContent.toString().contains(appRootDescription));
@@ -99,7 +99,7 @@ public class CommandLineServiceTest {
     @Test
     void printsRootCommandUsageForRootCommandHelpOptionShort() {
         String[] args = {"-h"};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
         assertTrue(outContent.toString().contains(appRootDescription));
@@ -116,7 +116,7 @@ public class CommandLineServiceTest {
     @Test
     void printsRootCommandUsageForRootCommandHelpOptionLong() {
         String[] args = {"--help"};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains(appRootCommand));
         assertTrue(outContent.toString().contains(appRootDescription));
@@ -137,7 +137,7 @@ public class CommandLineServiceTest {
         System.setIn(in);
 
         String[] args = {"--halp"};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains("Did you mean '--help'?"));
 
@@ -161,7 +161,7 @@ public class CommandLineServiceTest {
 
         String badLongOption = "--halp";
         String[] args = {badLongOption};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(outContent.toString().contains("Did you mean '--help'?"));
 
@@ -182,7 +182,7 @@ public class CommandLineServiceTest {
     void printsActionableUsageForUnknownRootCommandOptionShort() {
         String badShortOption = "-bad-short-option";
         String[] args = {badShortOption};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(errContent.toString().contains(badShortOption));
         assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
@@ -203,7 +203,7 @@ public class CommandLineServiceTest {
     void printsActionableUsageForUnknownRootCommandOptionLong() {
         String badLongOption = "--bad-long-option";
         String[] args = {badLongOption};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(errContent.toString().contains(badLongOption));
         assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
@@ -224,7 +224,7 @@ public class CommandLineServiceTest {
     void printsActionableUsageForRootCommandUnmatchedParameter() {
         String unmatchedParameter = "bad-command";
         String[] args = {unmatchedParameter};
-        picoService.run(args);
+        commandLineService.run(args);
 
         assertTrue(errContent.toString().contains(unmatchedParameter));
         assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
@@ -243,10 +243,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void addedSubcommandIsIncludedInRootCommandUsage() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(appRootCommand));
 //        assertTrue(outContent.toString().contains(appRootDescription));
@@ -264,10 +264,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsSubcommandVersionForSubcommandVersionOptionShort() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {subcommand, "-V"};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommandVersion));
 //
@@ -276,10 +276,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsSubcommandVersionForSubcommandVersionOptionLong() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {subcommand, "--version"};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommandVersion));
 //
@@ -288,10 +288,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsSubcommandUsageForSubcommandWithNoArguments() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {subcommand};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommand));
 //        assertTrue(outContent.toString().contains(subcommandDescription));
@@ -307,10 +307,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsSubcommandUsageForSubcommandWithHelpAsOnlyArgument() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {subcommand, "help"};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommand));
 //        assertTrue(outContent.toString().contains(subcommandDescription));
@@ -326,10 +326,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsSubcommandUsageForSubcommandHelpOptionShort() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {subcommand, "-h"};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommand));
 //        assertTrue(outContent.toString().contains(subcommandDescription));
@@ -345,10 +345,10 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsSubcommandUsageForSubcommandHelpOptionLong() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String[] args = {subcommand, "--help"};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommand));
 //        assertTrue(outContent.toString().contains(subcommandDescription));
@@ -364,11 +364,11 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsActionableUsageForUnknownSubcommandOptionShort() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String badShortOption = "-bad-short-option";
 //        String[] args = {subcommand, badShortOption};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(errContent.toString().contains(badShortOption));
 //        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
@@ -387,11 +387,11 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsActionableUsageForUnknownSubcommandOptionLong() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String badLongOption = "--bad-long-option";
 //        String[] args = {subcommand, badLongOption};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(errContent.toString().contains(badLongOption));
 //        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
@@ -410,11 +410,11 @@ public class CommandLineServiceTest {
 //
 //    @Test
 //    void printsActionableUsageForSubcommandUnmatchedParameter() {
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
 //
 //        String unmatchedParameter = "bad-command";
 //        String[] args = {subcommand, unmatchedParameter};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(errContent.toString().contains(unmatchedParameter));
 //        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
@@ -436,11 +436,11 @@ public class CommandLineServiceTest {
 //        String subcommandParameter = "test-parameter";
 //        String subcommandParameterDescription = "A sample parameter for testing purposes.";
 //
-//        picoService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//        picoService.addParameterForSubcommand(subcommand, subcommandParameter, String.class, subcommandParameterDescription);
+//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addParameterForSubcommand(subcommand, subcommandParameter, String.class, subcommandParameterDescription);
 //
 //        String[] args = {subcommand};
-//        picoService.run(args);
+//        commandLineService.run(args);
 //
 //        assertTrue(outContent.toString().contains(subcommand));
 //        assertTrue(outContent.toString().contains(subcommandDescription));

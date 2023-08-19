@@ -16,13 +16,13 @@ public class Main {
 
         String formattedRootCommandVersion = rootCommand + " | " + applicationName + " | Version " + rootCommandVersion;
 
-        CommandLineService cliService = new CommandLineService(
+        CommandLineService commandLineService = new CommandLineService(
                 rootCommand,
                 formattedRootCommandVersion,
                 applicationDescription
         );
 
-        int exitCode = cliService.run(args);
+        int exitCode = commandLineService.run(args);
 
         System.exit(exitCode);
     }
