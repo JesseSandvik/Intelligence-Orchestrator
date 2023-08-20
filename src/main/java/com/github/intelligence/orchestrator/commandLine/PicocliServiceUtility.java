@@ -152,15 +152,38 @@ class PicocliServiceUtility {
         };
     }
 
+    private boolean providedArgumentForCommandIsHelp(CommandLine command, String arg) {
+        return arg.equalsIgnoreCase("help");
+    }
+
+    private boolean providedArgumentForCommandIsSubcommand(CommandLine command, String arg) {
+        CommandLine subcommand = command.getSubcommands().get(arg);
+        return subcommand != null;
+    }
+
     public int run(String[] args) {
         CommandLine rootCommand = new CommandLine(rootSpec);
         rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand));
 
-        if (args.length == 0 || args.length == 1 && Objects.equals(args[0].toLowerCase(), "help")) {
-            rootCommand.usage(System.out);
-            return 0;
-        } else {
-            return rootCommand.execute(args);
+        switch(args.length) {
+            case 0:
+                rootCommand.usage(System.out);
+                return 0;
+            case 1:
+                if (providedArgumentForCommandIsHelp(rootCommand, args[0])) {
+                    rootCommand.usage(System.out);
+                    return 0;
+                } else if (providedArgumentForCommandIsSubcommand(rootCommand, args[0])) {
+                    rootCommand.getSubcommands().get(args[0]).usage(System.out);
+                    return 0;
+                }
+            case 2:
+                if (providedArgumentForCommandIsSubcommand(rootCommand, args[0]) && providedArgumentForCommandIsHelp(rootCommand, args[1])) {
+                    rootCommand.getSubcommands().get(args[0]).usage(System.out);
+                    return 0;
+                }
+            default:
+                return rootCommand.execute(args);
         }
     }
 }

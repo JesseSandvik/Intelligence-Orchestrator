@@ -22,6 +22,8 @@ public class Main {
                 applicationDescription
         );
 
+        commandLineService.addSubcommand("echo", "1.0.0", "Echo command...", () -> {});
+
         int exitCode = commandLineService.run(args);
 
         System.exit(exitCode);

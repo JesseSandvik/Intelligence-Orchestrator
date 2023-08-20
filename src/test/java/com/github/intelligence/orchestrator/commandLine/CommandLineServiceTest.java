@@ -284,44 +284,44 @@ public class CommandLineServiceTest {
         assertEquals(errContent.toString(), "");
     }
 
-//    @Test
-//    void printsSubcommandUsageForSubcommandWithNoArguments() {
-//        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {subcommandName};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommandName));
-//        assertTrue(outContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(outContent.toString().contains("-h"));
-//        assertTrue(outContent.toString().contains("--help"));
-//
-//        assertTrue(outContent.toString().contains("-V"));
-//        assertTrue(outContent.toString().contains("--version"));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
-//
-//    @Test
-//    void printsSubcommandUsageForSubcommandWithHelpAsOnlyArgument() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {subcommand, "help"};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommand));
-//        assertTrue(outContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(outContent.toString().contains("-h"));
-//        assertTrue(outContent.toString().contains("--help"));
-//
-//        assertTrue(outContent.toString().contains("-V"));
-//        assertTrue(outContent.toString().contains("--version"));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
-//
+    @Test
+    void printsSubcommandUsageForSubcommandWithNoArguments() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {subcommandName};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
+
+    @Test
+    void printsSubcommandUsageForSubcommandWithHelpAsOnlyArgument() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {subcommandName, "help"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
+
     @Test
     void printsSubcommandUsageForSubcommandHelpOptionShort() {
         commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
@@ -359,75 +359,75 @@ public class CommandLineServiceTest {
 
         assertEquals(errContent.toString(), "");
     }
-//
-//    @Test
-//    void printsActionableUsageForUnknownSubcommandOptionShort() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String badShortOption = "-bad-short-option";
-//        String[] args = {subcommand, badShortOption};
-//        commandLineService.run(args);
-//
-//        assertTrue(errContent.toString().contains(badShortOption));
-//        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
-//
-//        assertTrue(errContent.toString().contains(subcommand));
-//        assertTrue(errContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(errContent.toString().contains("-h"));
-//        assertTrue(errContent.toString().contains("--help"));
-//
-//        assertTrue(errContent.toString().contains("-V"));
-//        assertTrue(errContent.toString().contains("--version"));
-//
-//        assertEquals(outContent.toString(), "");
-//    }
-//
-//    @Test
-//    void printsActionableUsageForUnknownSubcommandOptionLong() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String badLongOption = "--bad-long-option";
-//        String[] args = {subcommand, badLongOption};
-//        commandLineService.run(args);
-//
-//        assertTrue(errContent.toString().contains(badLongOption));
-//        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
-//
-//        assertTrue(errContent.toString().contains(subcommand));
-//        assertTrue(errContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(errContent.toString().contains("-h"));
-//        assertTrue(errContent.toString().contains("--help"));
-//
-//        assertTrue(errContent.toString().contains("-V"));
-//        assertTrue(errContent.toString().contains("--version"));
-//
-//        assertEquals(outContent.toString(), "");
-//    }
-//
-//    @Test
-//    void printsActionableUsageForSubcommandUnmatchedParameter() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String unmatchedParameter = "bad-command";
-//        String[] args = {subcommand, unmatchedParameter};
-//        commandLineService.run(args);
-//
-//        assertTrue(errContent.toString().contains(unmatchedParameter));
-//        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
-//
-//        assertTrue(errContent.toString().contains(subcommand));
-//        assertTrue(errContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(errContent.toString().contains("-h"));
-//        assertTrue(errContent.toString().contains("--help"));
-//
-//        assertTrue(errContent.toString().contains("-V"));
-//        assertTrue(errContent.toString().contains("--version"));
-//
-//        assertEquals(outContent.toString(), "");
-//    }
+
+    @Test
+    void printsActionableUsageForUnknownSubcommandOptionShort() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String badShortOption = "-bad-short-option";
+        String[] args = {subcommandName, badShortOption};
+        commandLineService.run(args);
+
+        assertTrue(errContent.toString().contains(badShortOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(subcommandName));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForUnknownSubcommandOptionLong() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String badLongOption = "--bad-long-option";
+        String[] args = {subcommandName, badLongOption};
+        commandLineService.run(args);
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(subcommandName));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
+
+    @Test
+    void printsActionableUsageForSubcommandUnmatchedParameter() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String unmatchedParameter = "bad-command";
+        String[] args = {subcommandName, unmatchedParameter};
+        commandLineService.run(args);
+
+        assertTrue(errContent.toString().contains(unmatchedParameter));
+        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
+
+        assertTrue(errContent.toString().contains(subcommandName));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+
+        assertEquals(outContent.toString(), "");
+    }
 //
 //    @Test
 //    void addedParameterForSubcommandIsIncludedInSubcommandUsage() {
