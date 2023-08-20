@@ -16,7 +16,7 @@ public class CommandLineServiceTest {
     private final String appRootDescription = "This is a test application";
     private final String appRootVersion = "1.0.0";
     private CommandLineService commandLineService;
-    private final String subcommand = "test-subcommand";
+    private final String subcommandName = "test-subcommand";
     private final String subcommandDescription = "This is a sample subcommand for testing";
     private final String subcommandVersion = "1.2.3";
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -238,60 +238,60 @@ public class CommandLineServiceTest {
 
         assertEquals(outContent.toString(), "");
     }
-//
-//    @Test
-//    void addedSubcommandIsIncludedInRootCommandUsage() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(appRootCommand));
-//        assertTrue(outContent.toString().contains(appRootDescription));
-//
-//        assertTrue(outContent.toString().contains("-h"));
-//        assertTrue(outContent.toString().contains("--help"));
-//
-//        assertTrue(outContent.toString().contains("-V"));
-//        assertTrue(outContent.toString().contains("--version"));
-//
-//        assertTrue(outContent.toString().contains(subcommand));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
-//
-//    @Test
-//    void printsSubcommandVersionForSubcommandVersionOptionShort() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {subcommand, "-V"};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommandVersion));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
-//
-//    @Test
-//    void printsSubcommandVersionForSubcommandVersionOptionLong() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {subcommand, "--version"};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommandVersion));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
-//
+
+    @Test
+    void addedSubcommandIsIncludedInRootCommandUsage() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(appRootCommand));
+        assertTrue(outContent.toString().contains(appRootDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertTrue(outContent.toString().contains(subcommandName));
+
+        assertEquals(errContent.toString(), "");
+    }
+
+    @Test
+    void printsSubcommandVersionForSubcommandVersionOptionShort() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {subcommandName, "-v"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandVersion));
+
+        assertEquals(errContent.toString(), "");
+    }
+
+    @Test
+    void printsSubcommandVersionForSubcommandVersionOptionLong() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {subcommandName, "--version"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandVersion));
+
+        assertEquals(errContent.toString(), "");
+    }
+
 //    @Test
 //    void printsSubcommandUsageForSubcommandWithNoArguments() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
+//        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
 //
-//        String[] args = {subcommand};
+//        String[] args = {subcommandName};
 //        commandLineService.run(args);
 //
-//        assertTrue(outContent.toString().contains(subcommand));
+//        assertTrue(outContent.toString().contains(subcommandName));
 //        assertTrue(outContent.toString().contains(subcommandDescription));
 //
 //        assertTrue(outContent.toString().contains("-h"));
@@ -322,43 +322,43 @@ public class CommandLineServiceTest {
 //        assertEquals(errContent.toString(), "");
 //    }
 //
-//    @Test
-//    void printsSubcommandUsageForSubcommandHelpOptionShort() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {subcommand, "-h"};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommand));
-//        assertTrue(outContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(outContent.toString().contains("-h"));
-//        assertTrue(outContent.toString().contains("--help"));
-//
-//        assertTrue(outContent.toString().contains("-V"));
-//        assertTrue(outContent.toString().contains("--version"));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
-//
-//    @Test
-//    void printsSubcommandUsageForSubcommandHelpOptionLong() {
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//
-//        String[] args = {subcommand, "--help"};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommand));
-//        assertTrue(outContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(outContent.toString().contains("-h"));
-//        assertTrue(outContent.toString().contains("--help"));
-//
-//        assertTrue(outContent.toString().contains("-V"));
-//        assertTrue(outContent.toString().contains("--version"));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
+    @Test
+    void printsSubcommandUsageForSubcommandHelpOptionShort() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {subcommandName, "-h"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
+
+    @Test
+    void printsSubcommandUsageForSubcommandHelpOptionLong() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+
+        String[] args = {subcommandName, "--help"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
 //
 //    @Test
 //    void printsActionableUsageForUnknownSubcommandOptionShort() {

@@ -18,9 +18,28 @@ class PicocliServiceUtility {
                 .subcommandsCaseInsensitive(true)
                 .version(rootCommandVersion);
 
-        rootSpec.addSubcommand("echo", wrapWithoutInspection((Runnable) () -> {}));
-
         setStandardizedUsageForCommandSpec(rootSpec, rootCommandDescription);
+    }
+
+    public void addSubcommand(
+            String subcommandName,
+            String subcommandVersion,
+            String subcommandDescription,
+            Runnable subcommandOperation
+    ) {
+        rootSpec.addSubcommand(
+                subcommandName,
+                wrapWithoutInspection(subcommandOperation)
+        );
+
+        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommandName).getCommandSpec();
+
+        subcommandSpec
+                .optionsCaseInsensitive(true)
+                .subcommandsCaseInsensitive(true)
+                .version(subcommandVersion);
+
+        setStandardizedUsageForCommandSpec(subcommandSpec, subcommandDescription);
     }
 
     private CommandSpec setStandardOptions() {
