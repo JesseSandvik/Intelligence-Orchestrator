@@ -36,6 +36,10 @@ public class CommandLineServiceTest {
         );
     }
 
+    public void addSubcommand() {
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+    }
+
     @AfterEach
     public void restoreStreams() {
         System.setOut(originalOut);
@@ -173,7 +177,7 @@ public class CommandLineServiceTest {
     }
 
     @Test
-    void detectsIntendedOptionLongAndExecutesOptionLongSuccessfullyWhenUserConfirmsYes() {
+    void detectsIntendedRootCommandOptionLongAndExecutesOptionLongSuccessfullyWhenUserConfirmsYes() {
         String input = "YES";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
@@ -194,7 +198,7 @@ public class CommandLineServiceTest {
     }
 
     @Test
-    void detectsIntendedOptionLongAndPrintsActionableUsageWhenUserConfirmsNo() {
+    void detectsIntendedRootCommandOptionLongAndPrintsActionableUsageWhenUserConfirmsNo() {
         String input = "NO";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
@@ -241,7 +245,7 @@ public class CommandLineServiceTest {
 
     @Test
     void addedSubcommandIsIncludedInRootCommandUsage() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {};
         commandLineService.run(args);
@@ -261,8 +265,56 @@ public class CommandLineServiceTest {
     }
 
     @Test
+    void detectsIntendedSubcommandForRootCommandAndExecutesSubcommandSuccessfullyWhenUserConfirmsYes() {
+        String input = "YES";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        addSubcommand();
+        String[] args = {"test-subcomma"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains("Did you mean '" + subcommandName + "'?"));
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+    }
+
+    @Test
+    void detectsIntendedSubcommandForRootCommandAndPrintsActionableUsageWhenUserConfirmsNo() {
+        String input = "NO";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        addSubcommand();
+        String badLongOption = "test-subcomma";
+        String[] args = {badLongOption};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains("Did you mean '" + subcommandName + "'?"));
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Commands' section"));
+
+        assertTrue(errContent.toString().contains(appRootCommand));
+        assertTrue(errContent.toString().contains(appRootDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+    }
+
+    @Test
     void printsSubcommandVersionForSubcommandVersionOptionShort() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {subcommandName, "-v"};
         commandLineService.run(args);
@@ -274,7 +326,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsSubcommandVersionForSubcommandVersionOptionLong() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {subcommandName, "--version"};
         commandLineService.run(args);
@@ -286,7 +338,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsSubcommandUsageForSubcommandWithNoArguments() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {subcommandName};
         commandLineService.run(args);
@@ -305,7 +357,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsSubcommandUsageForSubcommandWithHelpAsOnlyArgument() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {subcommandName, "help"};
         commandLineService.run(args);
@@ -324,7 +376,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsSubcommandUsageForSubcommandHelpOptionShort() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {subcommandName, "-h"};
         commandLineService.run(args);
@@ -343,7 +395,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsSubcommandUsageForSubcommandHelpOptionLong() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String[] args = {subcommandName, "--help"};
         commandLineService.run(args);
@@ -362,7 +414,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsActionableUsageForUnknownSubcommandOptionShort() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String badShortOption = "-bad-short-option";
         String[] args = {subcommandName, badShortOption};
@@ -385,7 +437,7 @@ public class CommandLineServiceTest {
 
     @Test
     void printsActionableUsageForUnknownSubcommandOptionLong() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String badLongOption = "--bad-long-option";
         String[] args = {subcommandName, badLongOption};
@@ -407,8 +459,56 @@ public class CommandLineServiceTest {
     }
 
     @Test
+    void detectsIntendedSubcommandOptionLongAndExecutesOptionLongSuccessfullyWhenUserConfirmsYes() {
+        String input = "YES";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        addSubcommand();
+        String[] args = {subcommandName, "--halp"};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains("Did you mean '--help'?"));
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+    }
+
+    @Test
+    void detectsIntendedSubcommandOptionLongAndPrintsActionableUsageWhenUserConfirmsNo() {
+        String input = "NO";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        addSubcommand();
+        String badLongOption = "--halp";
+        String[] args = {subcommandName, badLongOption};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains("Did you mean '--help'?"));
+
+        assertTrue(errContent.toString().contains(badLongOption));
+        assertTrue(errContent.toString().contains("Please refer to the 'Options' section"));
+
+        assertTrue(errContent.toString().contains(subcommandName));
+        assertTrue(errContent.toString().contains(subcommandDescription));
+
+        assertTrue(errContent.toString().contains("-h"));
+        assertTrue(errContent.toString().contains("--help"));
+
+        assertTrue(errContent.toString().contains("-v"));
+        assertTrue(errContent.toString().contains("--version"));
+    }
+
+    @Test
     void printsActionableUsageForSubcommandUnmatchedParameter() {
-        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        addSubcommand();
 
         String unmatchedParameter = "bad-command";
         String[] args = {subcommandName, unmatchedParameter};

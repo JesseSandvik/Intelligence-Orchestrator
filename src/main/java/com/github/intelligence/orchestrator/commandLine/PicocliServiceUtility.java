@@ -134,7 +134,7 @@ class PicocliServiceUtility {
                                         updatedArguments[i] = originalArguments.get(i);
                                     }
                                 }
-                                return currentCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(currentCommand)).execute(updatedArguments);
+                                return run(updatedArguments);
                             }
                         }
                     }
