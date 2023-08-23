@@ -42,6 +42,22 @@ class PicocliServiceUtility {
         setStandardizedUsageForCommandSpec(subcommandSpec, subcommandDescription);
     }
 
+    public void addSubcommandParameter(
+            String subcommandName,
+            String parameterLabel,
+            Class<?> parameterType,
+            String parameterDescription
+    ) {
+        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommandName).getCommandSpec();
+
+        subcommandSpec.addPositional(PositionalParamSpec
+                .builder()
+                .paramLabel(parameterLabel)
+                .type(parameterType)
+                .description(parameterDescription)
+                .build());
+    }
+
     private CommandSpec setStandardOptions() {
         return CommandSpec.create()
                 .addOption(OptionSpec.builder("-h", "--help")

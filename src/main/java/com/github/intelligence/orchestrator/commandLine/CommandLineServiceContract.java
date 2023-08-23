@@ -7,5 +7,11 @@ public interface CommandLineServiceContract {
             String subcommandDescription,
             Runnable subcommandOperation
     );
+    void addSubcommandParameter(
+            String subcommandName,
+            String parameterLabel,
+            Class<?> parameterType,
+            String parameterDescription
+    );
     int run(String[] args);
 }

@@ -17,6 +17,16 @@ public class CommandLineService implements CommandLineServiceContract {
         commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, subcommandOperation);
     }
 
+    @Override
+    public void addSubcommandParameter(String subcommandName, String parameterLabel, Class<?> parameterType, String parameterDescription) {
+        commandLineService.addSubcommandParameter(
+                subcommandName,
+                parameterLabel,
+                parameterType,
+                parameterDescription
+        );
+    }
+
     public int run(String[] args) {
         return commandLineService.run(args);
     }

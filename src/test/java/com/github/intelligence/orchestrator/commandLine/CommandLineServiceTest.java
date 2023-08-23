@@ -528,30 +528,30 @@ public class CommandLineServiceTest {
 
         assertEquals(outContent.toString(), "");
     }
-//
-//    @Test
-//    void addedParameterForSubcommandIsIncludedInSubcommandUsage() {
-//        String subcommandParameter = "test-parameter";
-//        String subcommandParameterDescription = "A sample parameter for testing purposes.";
-//
-//        commandLineService.addSubcommand(subcommand, subcommandVersion, subcommandDescription, () -> {});
-//        commandLineService.addParameterForSubcommand(subcommand, subcommandParameter, String.class, subcommandParameterDescription);
-//
-//        String[] args = {subcommand};
-//        commandLineService.run(args);
-//
-//        assertTrue(outContent.toString().contains(subcommand));
-//        assertTrue(outContent.toString().contains(subcommandDescription));
-//
-//        assertTrue(outContent.toString().contains(subcommandParameter));
-//        assertTrue(outContent.toString().contains(subcommandParameterDescription));
-//
-//        assertTrue(outContent.toString().contains("-h"));
-//        assertTrue(outContent.toString().contains("--help"));
-//
-//        assertTrue(outContent.toString().contains("-V"));
-//        assertTrue(outContent.toString().contains("--version"));
-//
-//        assertEquals(errContent.toString(), "");
-//    }
+
+    @Test
+    void addedParameterForSubcommandIsIncludedInSubcommandUsage() {
+        String subcommandParameter = "test-parameter";
+        String subcommandParameterDescription = "A sample parameter for testing purposes.";
+
+        commandLineService.addSubcommand(subcommandName, subcommandVersion, subcommandDescription, () -> {});
+        commandLineService.addSubcommandParameter(subcommandName, subcommandParameter, String.class, subcommandParameterDescription);
+
+        String[] args = {subcommandName};
+        commandLineService.run(args);
+
+        assertTrue(outContent.toString().contains(subcommandName));
+        assertTrue(outContent.toString().contains(subcommandDescription));
+
+        assertTrue(outContent.toString().contains(subcommandParameter));
+        assertTrue(outContent.toString().contains(subcommandParameterDescription));
+
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+
+        assertTrue(outContent.toString().contains("-v"));
+        assertTrue(outContent.toString().contains("--version"));
+
+        assertEquals(errContent.toString(), "");
+    }
 }
