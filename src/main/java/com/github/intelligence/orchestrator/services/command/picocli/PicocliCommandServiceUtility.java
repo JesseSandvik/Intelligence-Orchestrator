@@ -2,9 +2,6 @@ package com.github.intelligence.orchestrator.services.command.picocli;
 
 import com.github.intelligence.orchestrator.command.Command;
 import picocli.CommandLine;
-import picocli.CommandLine.*;
-
-import java.util.*;
 
 public class PicocliCommandServiceUtility {
     private final Command command;
@@ -116,9 +113,14 @@ public class PicocliCommandServiceUtility {
                 command.getVersion(),
                 command.getDescription()
         );
-        CommandLine command = commandBuilder.build();
+        CommandLine picocliCommand = commandBuilder.build();
+        String[] args = command.getArgs();
 
-        command.usage(System.out);
-        return 0;
+        if (args.length < 1) {
+            picocliCommand.usage(System.out);
+            return 0;
+        }
+
+        return picocliCommand.execute(args);
     }
 }

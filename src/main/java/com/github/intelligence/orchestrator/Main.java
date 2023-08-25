@@ -6,7 +6,7 @@ import com.github.intelligence.orchestrator.services.command.CommandService;
 public class Main {
 
     public static void main(String[] args) {
-        Command command = new Command("io", "1.0.0", "Test description.");
+        Command command = new Command("io", "1.0.0", "Test description.", args);
         CommandService commandService = new CommandService(command);
         int exitCode = commandService.run();
 
