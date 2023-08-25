@@ -1,4 +1,4 @@
-package com.github.intelligence.orchestrator.properties;
+package com.github.intelligence.orchestrator.services.properties;
 
 public interface PropertiesServiceContract {
     String getProperty(String propertyKey);

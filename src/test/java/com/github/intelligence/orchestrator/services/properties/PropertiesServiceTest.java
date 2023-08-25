@@ -1,4 +1,4 @@
-package com.github.intelligence.orchestrator.properties;
+package com.github.intelligence.orchestrator.services.properties;
 
 import org.junit.jupiter.api.Test;
 import java.io.IOException;

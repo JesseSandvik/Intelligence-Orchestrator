@@ -1,4 +1,4 @@
-package com.github.intelligence.orchestrator.properties;
+package com.github.intelligence.orchestrator.services.properties;
 
 import java.io.IOException;
 import java.io.InputStream;

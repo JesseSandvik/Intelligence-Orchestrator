@@ -1,5 +1,6 @@
-package com.github.intelligence.orchestrator.commandLine;
+package com.github.intelligence.orchestrator.command;
 
+import com.github.intelligence.orchestrator.services.command.CommandService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class CommandLineServiceTest {
     private final String appRootCommand = "app";
     private final String appRootDescription = "This is a test application";
     private final String appRootVersion = "1.0.0";
-    private CommandLineService commandLineService;
+    private CommandService commandLineService;
     private final String subcommandName = "test-subcommand";
     private final String subcommandDescription = "This is a sample subcommand for testing";
     private final String subcommandVersion = "1.2.3";
@@ -29,7 +30,7 @@ public class CommandLineServiceTest {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
 
-        commandLineService = new CommandLineService(
+        commandLineService = new CommandService(
                 appRootCommand,
                 appRootVersion,
                 appRootDescription

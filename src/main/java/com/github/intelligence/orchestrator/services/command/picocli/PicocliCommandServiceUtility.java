@@ -1,4 +1,4 @@
-package com.github.intelligence.orchestrator.commandLine;
+package com.github.intelligence.orchestrator.services.command.picocli;
 
 import picocli.CommandLine;
 import picocli.CommandLine.*;
@@ -6,12 +6,10 @@ import picocli.CommandLine.Model.*;
 
 import java.util.*;
 
-import static picocli.CommandLine.Model.CommandSpec.wrapWithoutInspection;
-
-class PicocliServiceUtility {
+public class PicocliCommandServiceUtility {
     private static CommandSpec rootSpec;
 
-    public PicocliServiceUtility(String rootCommandName, String rootCommandVersion, String rootCommandDescription) {
+    public PicocliCommandServiceUtility(String rootCommandName, String rootCommandVersion, String rootCommandDescription) {
         rootSpec = CommandSpec.create();
         rootSpec.name(rootCommandName)
                 .optionsCaseInsensitive(true)
@@ -19,43 +17,6 @@ class PicocliServiceUtility {
                 .version(rootCommandVersion);
 
         setStandardizedUsageForCommandSpec(rootSpec, rootCommandDescription);
-    }
-
-    public void addSubcommand(
-            String subcommandName,
-            String subcommandVersion,
-            String subcommandDescription,
-            Runnable subcommandOperation
-    ) {
-        rootSpec.addSubcommand(
-                subcommandName,
-                wrapWithoutInspection(subcommandOperation)
-        );
-
-        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommandName).getCommandSpec();
-
-        subcommandSpec
-                .optionsCaseInsensitive(true)
-                .subcommandsCaseInsensitive(true)
-                .version(subcommandVersion);
-
-        setStandardizedUsageForCommandSpec(subcommandSpec, subcommandDescription);
-    }
-
-    public void addSubcommandParameter(
-            String subcommandName,
-            String parameterLabel,
-            Class<?> parameterType,
-            String parameterDescription
-    ) {
-        CommandSpec subcommandSpec = rootSpec.subcommands().get(subcommandName).getCommandSpec();
-
-        subcommandSpec.addPositional(PositionalParamSpec
-                .builder()
-                .paramLabel(parameterLabel)
-                .type(parameterType)
-                .description(parameterDescription)
-                .build());
     }
 
     private CommandSpec setStandardOptions() {
@@ -177,29 +138,5 @@ class PicocliServiceUtility {
         return subcommand != null;
     }
 
-    public int run(String[] args) {
-        CommandLine rootCommand = new CommandLine(rootSpec);
-        rootCommand.setParameterExceptionHandler(handleUnmatchedArgumentAtFirstIndex(rootCommand));
-
-        switch(args.length) {
-            case 0:
-                rootCommand.usage(System.out);
-                return 0;
-            case 1:
-                if (providedArgumentForCommandIsHelp(rootCommand, args[0])) {
-                    rootCommand.usage(System.out);
-                    return 0;
-                } else if (providedArgumentForCommandIsSubcommand(rootCommand, args[0])) {
-                    rootCommand.getSubcommands().get(args[0]).usage(System.out);
-                    return 0;
-                }
-            case 2:
-                if (providedArgumentForCommandIsSubcommand(rootCommand, args[0]) && providedArgumentForCommandIsHelp(rootCommand, args[1])) {
-                    rootCommand.getSubcommands().get(args[0]).usage(System.out);
-                    return 0;
-                }
-            default:
-                return rootCommand.execute(args);
-        }
-    }
+    public int run(String[] args) {}
 }
