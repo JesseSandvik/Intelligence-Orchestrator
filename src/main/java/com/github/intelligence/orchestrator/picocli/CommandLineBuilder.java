@@ -40,4 +40,26 @@ public class CommandLineBuilder {
         this.commandSpec.addSubcommand("help", helpSubcommandSpec);
         return this;
     }
+
+    public CommandLineBuilder addStandardHelpOption() {
+        this.commandSpec.addOption(OptionSpec
+                .builder("-h", "--help")
+                .usageHelp(true)
+                .description("Show this help message and exit.")
+                .build());
+        return this;
+    }
+
+    public CommandLineBuilder addStandardVersionOption() {
+        this.commandSpec.addOption(OptionSpec
+                .builder("-v", "--version")
+                .versionHelp(true)
+                .description("Print version information and exit.")
+                .build());
+        return this;
+    }
+
+    public CommandLine build() {
+        return new CommandLine(commandSpec);
+    }
 }
