@@ -1,6 +1,7 @@
 package com.github.intelligence.orchestrator.picocli;
 
 import com.github.intelligence.orchestrator.command.Command;
+import picocli.CommandLine;
 import picocli.CommandLine.Model.*;
 
 public class CommandLineBuilder {
@@ -31,5 +32,12 @@ public class CommandLineBuilder {
                 .commandListHeading("\nCommands:%n")
                 .optionListHeading("\nOptions:%n")
                 .parameterListHeading("\nParameters:%n");
+    }
+
+    public CommandLineBuilder addHiddenHelpSubcommand() {
+        CommandSpec helpSubcommandSpec = CommandSpec.forAnnotatedObject(new CommandLine.HelpCommand());
+        helpSubcommandSpec.usageMessage().hidden(true);
+        this.commandSpec.addSubcommand("help", helpSubcommandSpec);
+        return this;
     }
 }
