@@ -8,17 +8,18 @@ import java.util.concurrent.Callable;
 
 public class Command implements Callable<Integer> {
     private final String name;
-    private String version;
+    private final String version;
     private String usageDescriptionSynopsis;
     private String usageDescriptionFull;
-    private List<Parameter> parameters = new ArrayList<>();
-    private List<Option> options = new ArrayList<>();
-    private List<Command> subcommands = new ArrayList<>();
-    private Map<String, Object> valuesToPositionalParameterLabels = new LinkedHashMap<>();
-    private Map<String, Object> valuesToOptionNames = new LinkedHashMap<>();
+    private final List<Parameter> parameters = new ArrayList<>();
+    private final List<Option> options = new ArrayList<>();
+    private final List<Command> subcommands = new ArrayList<>();
+    private final Map<String, Object> valuesToPositionalParameters = new LinkedHashMap<>();
+    private final Map<String, Object> valuesToLongOptionNames = new LinkedHashMap<>();
 
-    public Command(String name) {
+    public Command(String name, String version) {
         this.name = name;
+        this.version = version;
     }
 
     public String getName() {
@@ -29,56 +30,60 @@ public class Command implements Callable<Integer> {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     public String getUsageDescriptionSynopsis() {
         return usageDescriptionSynopsis;
-    }
-
-    public void setUsageDescriptionSynopsis(String usageDescriptionSynopsis) {
-        this.usageDescriptionSynopsis = usageDescriptionSynopsis;
     }
 
     public String getUsageDescriptionFull() {
         return usageDescriptionFull;
     }
 
-    public void setUsageDescriptionFull(String usageDescriptionFull) {
-        this.usageDescriptionFull = usageDescriptionFull;
-    }
-
     public List<Parameter> getParameters() {
         return parameters;
-    }
-
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
     }
 
     public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(List<Option> options) {
-        this.options = options;
-    }
-
     public List<Command> getSubcommands() {
         return subcommands;
     }
 
-    public void setSubcommands(List<Command> subcommands) {
-        this.subcommands = subcommands;
+    public Map<String, Object> getValuesToPositionalParameters() {
+        return valuesToPositionalParameters;
+    }
+
+    public Map<String, Object> getValuesToLongOptionNames() {
+        return valuesToLongOptionNames;
+    }
+
+    public void setUsageDescriptionSynopsis(String usageDescriptionSynopsis) {
+        this.usageDescriptionSynopsis = usageDescriptionSynopsis;
+    }
+
+    public void setUsageDescriptionFull(String usageDescriptionFull) {
+        this.usageDescriptionFull = usageDescriptionFull;
+    }
+
+    public void addParameter(Parameter parameter) {
+        parameters.add(parameter);
+    }
+
+    public void addOption(Option option) {
+        options.add(option);
+    }
+
+    public void addSubcommand(Command subcommand) {
+        subcommands.add(subcommand);
     }
 
     public void mapValueToPositionalParameterLabel(String positionalParameterLabel, Object value) {
-        valuesToPositionalParameterLabels.put(positionalParameterLabel, value);
+        valuesToPositionalParameters.put(positionalParameterLabel, value);
     }
 
-    public void mapValueToOptionName(String optionName, Object value) {
-        valuesToOptionNames.put(optionName, value);
+    public void mapValueToLongOptionName(String longOptionName, Object value) {
+        valuesToLongOptionNames.put(longOptionName, value);
     }
 
     @Override
