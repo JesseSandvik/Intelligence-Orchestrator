@@ -1,6 +1,7 @@
 package com.github.intelligence.orchestrator.picocli;
 
 import com.github.intelligence.orchestrator.command.Command;
+import com.github.intelligence.orchestrator.command.Parameter;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.*;
 
@@ -32,6 +33,16 @@ public class CommandLineBuilder {
                 .commandListHeading("\nCommands:%n")
                 .optionListHeading("\nOptions:%n")
                 .parameterListHeading("\nParameters:%n");
+    }
+
+    public CommandLineBuilder addPositionalParameter(Parameter parameter) {
+        this.commandSpec.addPositional(PositionalParamSpec
+                .builder()
+                .description(parameter.description())
+                .paramLabel(parameter.label())
+                .build()
+        );
+        return this;
     }
 
     public CommandLineBuilder addHiddenHelpSubcommand() {
